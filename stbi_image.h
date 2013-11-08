@@ -1,0 +1,6 @@
+#ifndef STBI_IMAGE_H_INCLUDED
+#define STBI_IMAGE_H_INCLUDED
+
+
+
+#endif // STBI_IMAGE_H_INCLUDED
