@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="3DEngine" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="Engine/;Game/;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/3DEngine" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="src" />
+				</Compiler>
+				<Linker>
+					<Add library="SDL" />
+					<Add library="GLEW" />
+					<Add directory="src" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/3DEngine" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="SDL" />
+					<Add library="GLEW" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="`sdl-config --cflags`" />
+			<Add option="-Wall" />
+		</Compiler>
+		<Linker>
+			<Add option="`sdl-config --libs`" />
+		</Linker>
+		<Unit filename="src/basicShader.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/basicShader.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/camera.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/camera.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/component.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/component.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/display.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/display.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/engine.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/engine.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/gameComponent.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/gameObject.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/gameObject.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/input.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/input.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/main.cpp">
+			<Option virtualFolder="Game/" />
+		</Unit>
+		<Unit filename="src/material.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/math3d.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/math3d.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/mesh.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/mesh.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/meshRenderer.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/meshRenderer.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/myGame.cpp">
+			<Option virtualFolder="Game/" />
+		</Unit>
+		<Unit filename="src/myGame.h">
+			<Option virtualFolder="Game/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/renderer.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/renderer.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/shader.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/shader.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/stb_image.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/stb_image.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/texture.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/texture.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/timing.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/timing.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/transform.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
+		<Unit filename="src/transform.h">
+			<Option virtualFolder="Engine/" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
