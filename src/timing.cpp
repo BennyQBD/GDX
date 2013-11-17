@@ -6,7 +6,8 @@
 static const long NANOSECONDS_PER_SECOND = 1000000000L;
 
 //static double g_freq;
-static double g_delta;
+static double g_Delta;
+static double g_ElapsedTime;
 
 void Time::Init()
 {
@@ -15,12 +16,14 @@ void Time::Init()
 //		Display::Error("QueryPerformanceFrequency failed in timer initialization");
 //    
 //    g_freq = double(li.QuadPart);
-    g_delta = 0;
+    g_Delta = 0;
+    g_ElapsedTime = 0.0f;
 }
 
-void Time::SetDelta(double delta)
+void Time::Update(double delta)
 {
-    g_delta = delta;
+    g_Delta = delta;
+    g_ElapsedTime += delta;
 }
 
 double Time::GetTime()
@@ -38,5 +41,10 @@ double Time::GetTime()
 
 double Time::GetDelta()
 {
-    return g_delta;
+    return g_Delta;
+}
+
+double Time::GetElapsedTime()
+{
+    return g_ElapsedTime;
 }

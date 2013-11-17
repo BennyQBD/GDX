@@ -76,23 +76,26 @@ void Renderer::DeleteBuffer(unsigned int buffer)
     glDeleteBuffers(1, &buffer);
 }
 
-void Renderer::DrawTriangles(unsigned int vertexBuffer, unsigned int indexBuffer, int nIndices)
+void Renderer::DrawTriangles(unsigned int vertexBuffer, unsigned int indexBuffer, int nIndices, const VertexFormat& format)
 {
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    //glEnableVertexAttribArray(2);
+    for(int i = 0; i < format.nElements; i++)
+        glEnableVertexAttribArray(i);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)sizeof(Vector3f));
-    //glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(sizeof(Vector3f) + sizeof(Vector2f)));
+    
+    int memOffset = 0;
+    for(int i = 0; i < format.nElements; i++)
+    {
+        int n = format.ElementSizes[i] / sizeof(float);
+        glVertexAttribPointer(i, n, GL_FLOAT, GL_FALSE, format.VertexSize, (GLvoid*)memOffset);
+        memOffset += format.ElementSizes[i];
+    }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT, 0);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    //glDisableVertexAttribArray(2);
+    for(int i = 0; i < format.nElements; i++)
+        glDisableVertexAttribArray(i);
 }
 
 static inline void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage)
@@ -172,7 +175,13 @@ void Renderer::ValidateShaderProgram(unsigned int program)
 
 void Renderer::BindShaderProgram(unsigned int program)
 {
-    glUseProgram(program);
+    static unsigned int lastProgram = 0;
+    
+    if(lastProgram != program)
+    {
+        glUseProgram(program);
+        lastProgram = program;
+    }
 }
 
 unsigned int Renderer::GetShaderProgramUniformLocation(unsigned int program, const std::string& name)
@@ -203,7 +212,7 @@ void Renderer::SetUniformFloat(unsigned int uniformLocation, float value)
 
 void Renderer::SetUniformVector3f(unsigned int uniformLocation, const Vector3f& value)
 {
-    glUniform3f(uniformLocation, value.x, value.y, value.z);
+    glUniform3f(uniformLocation, value.GetX(), value.GetY(), value.GetZ());
 }
 
 void Renderer::SetUniformMatrix4f(unsigned int uniformLocation, const Matrix4f& value)
@@ -211,21 +220,30 @@ void Renderer::SetUniformMatrix4f(unsigned int uniformLocation, const Matrix4f& 
     glUniformMatrix4fv(uniformLocation, 1, GL_TRUE, &(value[0][0]));
 }
 
-unsigned int Renderer::CreateTexture(int width, int height, unsigned char* data, bool linearFiltering)
+unsigned int Renderer::CreateTexture(int width, int height, unsigned char* data, bool linearFiltering, bool repeatTexture)
 {
     unsigned int texture = 0;
     
     if(width > 0 && height > 0 && data != 0)
     {
         int filter;
+        int wrapMode;
         
         if(linearFiltering)
             filter = GL_LINEAR;
         else
             filter = GL_NEAREST;
+            
+        if(repeatTexture)
+            wrapMode = GL_REPEAT;
+        else
+            wrapMode = GL_NEAREST;
         
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
         
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
@@ -248,3 +266,26 @@ void Renderer::BindTexture(unsigned int texture, int unit)
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, texture);
 }
+//
+//void Renderer::CreateRenderTarget(unsigned int texture, bool depthTarget)
+//{
+//    unsigned int frameBuffer = glGenFramebuffers();
+//    
+//    glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+//    glFramebufferTexture(GL_FRAMEBUFFER, attachment, id, 0);
+//		
+//    if(attachment == GL_DEPTH_ATTACHMENT)
+//        glDrawBuffer(GL_NONE);
+//    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+//    {
+//        //TODO: Display Error
+//    }
+//		
+//    if(bind)
+//    {
+//        lastWriteBind = frameBuffer;
+//        glViewport(0,0,width,height);
+//    }
+//    else
+//        glBindFramebuffer(GL_FRAMEBUFFER, lastWriteBind);
+//}

@@ -10,17 +10,17 @@
 #include "camera.h"
 #include "display.h"
 #include "gameObject.h"
-#include "meshRenderer.h"
 #include "texture.h"
 
 //--------------------------------------------------------------------------------------
 // Global Variables
 //--------------------------------------------------------------------------------------
-static Camera				g_Camera;
+static PerspectiveCamera	g_Camera;
 static GameObject			g_GameObject1;
 static GameObject			g_GameObject2;
-static MeshRenderer		g_MeshRenderer;
+static RenderingComponent	g_MeshRenderer;
 
+static Texture             g_Texture;
 static Material			g_Material;
 static Mesh				g_Mesh;
 
@@ -45,18 +45,14 @@ MyGame::MyGame()
 
 	g_Mesh = Mesh(vertices, sizeof(vertices)/sizeof(Vertex), indices, sizeof(indices)/sizeof(INDEX));
 
-	g_Material.texture = Texture("bricks.jpg");
-	g_Material.color = Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
+    g_Texture = Texture("bricks.jpg");
+    g_Material = Material(g_Texture);
 
-	g_MeshRenderer = MeshRenderer(&g_Mesh, &g_Material, BasicShader::GetInstance());
+	g_MeshRenderer = RenderingComponent(&g_Mesh, &g_Material, BasicShader::GetInstance());
 
 	g_GameObject1 = GameObject(Transform(), &g_MeshRenderer);
 	g_GameObject2 = GameObject(Transform(Vector3f(), Quaternion(), Vector3f(0.3f, 0.3f, 0.3f)), &g_MeshRenderer);
-	g_Camera = Camera(Vector3f(0, 1, -5), Vector3f::FORWARD, Vector3f::UP);
-	
-	Vector2f displaySize = Display::GetSize();
-    float aspect = displaySize.x/displaySize.y;
-	Transform::Projection = Matrix4f::InitPerspective(ToRadians(70.0f), aspect, 0.01f, 100.0f);
+	g_Camera = PerspectiveCamera(Vector3f(0, 1, -5), Vector3f::FORWARD, Vector3f::UP, ToRadians(70.0f), 0.01f, 1000.0f);
 }
 
 MyGame::~MyGame()
@@ -107,13 +103,13 @@ void MyGame::Input(GameObject* pGameObject)
 	{
 		Vector2f deltaPos = centerPos - Input::GetMousePos();
 
-		bool rotX = (int)(deltaPos.y) != 0;
-		bool rotY = (int)(deltaPos.x) != 0;
+		bool rotX = (int)(deltaPos.GetY()) != 0;
+		bool rotY = (int)(deltaPos.GetX()) != 0;
 
 		if(rotY)
-			g_Camera.RotateY(deltaPos.x * SENSITIVITY_X);
+			g_Camera.RotateY(deltaPos.GetX() * SENSITIVITY_X);
 		if(rotX)
-			g_Camera.Pitch(deltaPos.y * SENSITIVITY_Y);
+			g_Camera.Pitch(deltaPos.GetY() * SENSITIVITY_Y);
 
 		if(rotX || rotY)
 			Display::SetMousePos(centerPos);
@@ -135,28 +131,16 @@ void MyGame::Input(GameObject* pGameObject)
 
 void MyGame::Update(GameObject* pGameObject)
 {
-//	if(Display::IsResized())
-//	{
-//		Vector2f displaySize = Display::GetSize();
-//		float aspect = displaySize.x/displaySize.y;
-//		Transform::Projection = Matrix4f::InitPerspective(MATH_TO_RADIANS_F(70.0f), aspect, 0.01f, 100.0f);
-//	}
+	g_GameObject1.GetTransform().Rotation = Quaternion(Vector3f::UP, (float)Time::GetElapsedTime());
 
-	static double t = 0.0f;
-	t += Time::GetDelta();
-
-	g_GameObject1.GetTransform().Rotation = Quaternion(Vector3f::UP, (float)t);
-
-	g_GameObject2.GetTransform().Pos = Vector3f(-4.0f, 0.0f, 0.0f).Rotate(Quaternion(Vector3f::UP, (float)t * 2.0f));
-	g_GameObject2.GetTransform().Rotation = Quaternion(Vector3f::FORWARD, -(float)t);
+	g_GameObject2.GetTransform().Pos = Vector3f(-4.0f, 0.0f, 0.0f).Rotate(Quaternion(Vector3f::UP, (float)Time::GetElapsedTime() * 2.0f));
+	g_GameObject2.GetTransform().Rotation = Quaternion(Vector3f::FORWARD, -(float)Time::GetElapsedTime());
 }
 
 void MyGame::Render(GameObject* pGameObject)
 {
-	Transform::View = g_Camera.ToMatrix();
-	Transform::CalcViewProjection();
+    Transform::CalcViewProjection(g_Camera);
 
 	g_GameObject1.Render();
 	g_GameObject2.Render();
 }
-

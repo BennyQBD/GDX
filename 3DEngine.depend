@@ -291,13 +291,13 @@
 	<sstream>
 	<cassert>
 
-1384015316 source:/home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.cpp
+1384120312 source:/home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.cpp
 	"basicShader.h"
 
-1383937127 /home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.h
+1384119137 /home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.h
 	"shader.h"
 
-1384028053 /home/batman/Workspace/C_Workspace/3DEngine/src/shader.h
+1384701749 /home/batman/Workspace/C_Workspace/3DEngine/src/shader.h
 	"display.h"
 	"math3d.h"
 	"material.h"
@@ -309,22 +309,25 @@
 	<map>
 	<iostream>
 
-1384005892 /home/batman/Workspace/C_Workspace/3DEngine/src/display.h
+1384700407 /home/batman/Workspace/C_Workspace/3DEngine/src/display.h
 	<string>
 	"math3d.h"
 
-1383938102 /home/batman/Workspace/C_Workspace/3DEngine/src/math3d.h
+1384701478 /home/batman/Workspace/C_Workspace/3DEngine/src/math3d.h
 	<math.h>
 
-1383937030 /home/batman/Workspace/C_Workspace/3DEngine/src/material.h
+1384120994 /home/batman/Workspace/C_Workspace/3DEngine/src/material.h
 	"texture.h"
 	"math3d.h"
-
-1384027385 /home/batman/Workspace/C_Workspace/3DEngine/src/texture.h
+	<map>
 	<string>
 
-1383909191 /home/batman/Workspace/C_Workspace/3DEngine/src/transform.h
+1384702222 /home/batman/Workspace/C_Workspace/3DEngine/src/texture.h
+	<string>
+
+1384705427 /home/batman/Workspace/C_Workspace/3DEngine/src/transform.h
 	"math3d.h"
+	"camera.h"
 
 1384005707 /home/batman/Workspace/C_Workspace/3DEngine/src/engine.h
 	"gameObject.h"
@@ -335,29 +338,33 @@
 	"component.h"
 	<vector>
 
-1383997922 /home/batman/Workspace/C_Workspace/3DEngine/src/component.h
+1384117122 /home/batman/Workspace/C_Workspace/3DEngine/src/component.h
 
-1384027818 /home/batman/Workspace/C_Workspace/3DEngine/src/renderer.h
+1384702723 /home/batman/Workspace/C_Workspace/3DEngine/src/renderer.h
 	<string>
 	"math3d.h"
 
-1383936662 source:/home/batman/Workspace/C_Workspace/3DEngine/src/camera.cpp
+1384704355 source:/home/batman/Workspace/C_Workspace/3DEngine/src/camera.cpp
 	"camera.h"
+	"display.h"
 
-1383933142 /home/batman/Workspace/C_Workspace/3DEngine/src/camera.h
+1384704830 /home/batman/Workspace/C_Workspace/3DEngine/src/camera.h
 	"math3d.h"
 
-1383998973 source:/home/batman/Workspace/C_Workspace/3DEngine/src/component.cpp
+1384117136 source:/home/batman/Workspace/C_Workspace/3DEngine/src/component.cpp
 	"component.h"
 	"gameObject.h"
+	"mesh.h"
+	"shader.h"
+	"material.h"
 
-1384006235 source:/home/batman/Workspace/C_Workspace/3DEngine/src/display.cpp
+1384700624 source:/home/batman/Workspace/C_Workspace/3DEngine/src/display.cpp
 	"display.h"
 	"engine.h"
 	<SDL/SDL.h>
 	<iostream>
 
-1384085732 source:/home/batman/Workspace/C_Workspace/3DEngine/src/engine.cpp
+1384705220 source:/home/batman/Workspace/C_Workspace/3DEngine/src/engine.cpp
 	"engine.h"
 	"timing.h"
 	"display.h"
@@ -388,16 +395,16 @@
 1383999374 /home/batman/Workspace/C_Workspace/3DEngine/src/myGame.h
 	"component.h"
 
-1383938128 source:/home/batman/Workspace/C_Workspace/3DEngine/src/math3d.cpp
+1384701470 source:/home/batman/Workspace/C_Workspace/3DEngine/src/math3d.cpp
 	"math3d.h"
-	<cassert>
 
-1384008744 source:/home/batman/Workspace/C_Workspace/3DEngine/src/mesh.cpp
+1384701065 source:/home/batman/Workspace/C_Workspace/3DEngine/src/mesh.cpp
 	"mesh.h"
 	"engine.h"
 
-1384008482 /home/batman/Workspace/C_Workspace/3DEngine/src/mesh.h
+1384267669 /home/batman/Workspace/C_Workspace/3DEngine/src/mesh.h
 	"math3d.h"
+	"renderer.h"
 
 1384015151 source:/home/batman/Workspace/C_Workspace/3DEngine/src/meshRenderer.cpp
 	"meshRenderer.h"
@@ -409,7 +416,7 @@
 	"material.h"
 	"shader.h"
 
-1384085701 source:/home/batman/Workspace/C_Workspace/3DEngine/src/myGame.cpp
+1384705137 source:/home/batman/Workspace/C_Workspace/3DEngine/src/myGame.cpp
 	"myGame.h"
 	"input.h"
 	"engine.h"
@@ -422,10 +429,9 @@
 	"camera.h"
 	"display.h"
 	"gameObject.h"
-	"meshRenderer.h"
 	"texture.h"
 
-1384028109 source:/home/batman/Workspace/C_Workspace/3DEngine/src/renderer.cpp
+1384702706 source:/home/batman/Workspace/C_Workspace/3DEngine/src/renderer.cpp
 	"renderer.h"
 	"mesh.h"
 	"math3d.h"
@@ -435,7 +441,7 @@
 	<sstream>
 	<cassert>
 
-1384028083 source:/home/batman/Workspace/C_Workspace/3DEngine/src/shader.cpp
+1384701745 source:/home/batman/Workspace/C_Workspace/3DEngine/src/shader.cpp
 	"shader.h"
 	<sstream>
 	<cassert>
@@ -453,19 +459,22 @@
 1383912834 /home/batman/Workspace/C_Workspace/3DEngine/src/stb_image.h
 	<stdio.h>
 
-1384027460 source:/home/batman/Workspace/C_Workspace/3DEngine/src/texture.cpp
+1384702177 source:/home/batman/Workspace/C_Workspace/3DEngine/src/texture.cpp
 	"texture.h"
 	"stb_image.h"
 	"display.h"
 	"engine.h"
 
-1383936841 source:/home/batman/Workspace/C_Workspace/3DEngine/src/transform.cpp
+1384704749 source:/home/batman/Workspace/C_Workspace/3DEngine/src/transform.cpp
 	"transform.h"
 
-1384085667 source:/home/batman/Workspace/C_Workspace/3DEngine/src/timing.cpp
+1384705211 source:/home/batman/Workspace/C_Workspace/3DEngine/src/timing.cpp
 	"timing.h"
 	"display.h"
 	<sys/time.h>
 
-1384085607 /home/batman/Workspace/C_Workspace/3DEngine/src/timing.h
+1384705213 /home/batman/Workspace/C_Workspace/3DEngine/src/timing.h
+
+1384120733 source:/home/batman/Workspace/C_Workspace/3DEngine/src/material.cpp
+	"material.h"
 

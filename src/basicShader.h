@@ -13,7 +13,7 @@ public:
     }
 
 	virtual void InitPass();
-	virtual void Update(Transform& transform, const Material& material);
+	virtual void Update(Transform& transform, Material& material);
 private:
 	BasicShader();
 	~BasicShader();

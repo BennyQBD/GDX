@@ -19,7 +19,7 @@ void BasicShader::InitPass()
 
 //static unsigned char whitePixel[] = {0xFF, 0xFF, 0xFF, 0xFF};
 
-void BasicShader::Update(Transform& transform, const Material& material)
+void BasicShader::Update(Transform& transform, Material& material)
 {
 //    static Texture WHITE = Texture(1,1,whitePixel);
 //
@@ -28,7 +28,8 @@ void BasicShader::Update(Transform& transform, const Material& material)
 //    else
 //        WHITE.bind();
 //
-    material.texture.Bind();
+    //material.texture.Bind();
+    material.GetDiffuseTexture()->Bind();
     SetMatrix4f("transform", transform.GetMVP());
 //    setUniform("color", material.color);
 }

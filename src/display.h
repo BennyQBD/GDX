@@ -19,6 +19,7 @@ namespace Display
 
 	void Error(const std::string& message);
 
+    float GetAspect();
 	Vector2f GetSize();
 	Vector2f GetCenter();
 	//bool IsResized();

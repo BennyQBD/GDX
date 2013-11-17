@@ -97,9 +97,9 @@ void CoreEngine::Start()
             frameTimeCount = 0;
         }
             
-        Time::SetDelta(frameLimit);
         while(timeCount >= frameLimit)
         {
+            Time::Update(frameLimit);
             drawFrame = true;
             Input::Update();
             m_pGame->Input();

@@ -71,7 +71,12 @@ void Display::Error(const std::string& message)
 
 void Display::SetMousePos(const Vector2f& pos)
 {
-    SDL_WarpMouse(pos.x, pos.y);
+    SDL_WarpMouse(pos.GetX(), pos.GetY());
+}
+
+float Display::GetAspect()
+{
+    return (float)g_Width/(float)g_Height;
 }
 
 Vector2f Display::GetSize()

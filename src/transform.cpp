@@ -49,3 +49,26 @@ void Transform::CalcViewProjection()
 {
 	ViewProjection = Transform::Projection * Transform::View;
 }
+
+void Transform::CalcViewProjection(const Camera& camera)
+{
+    CalcViewProjection(camera.GetPositionRotation(), camera.GetProjection());
+}
+
+void Transform::CalcViewProjection(const Matrix4f& view, const Matrix4f& projection)
+{
+    Transform::View = view;
+    Transform::Projection = projection;
+    CalcViewProjection();
+}
+
+void Transform::SetView(const Matrix4f& view)
+{
+    Transform::View = view;
+}
+
+void Transform::SetProjection(const Matrix4f& projection)
+{
+    Transform::Projection = projection;
+}
+

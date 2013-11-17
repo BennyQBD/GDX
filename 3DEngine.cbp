@@ -100,6 +100,9 @@
 		<Unit filename="src/main.cpp">
 			<Option virtualFolder="Game/" />
 		</Unit>
+		<Unit filename="src/material.cpp">
+			<Option virtualFolder="Engine/" />
+		</Unit>
 		<Unit filename="src/material.h">
 			<Option virtualFolder="Engine/" />
 			<Option target="&lt;{~None~}&gt;" />
@@ -115,13 +118,6 @@
 			<Option virtualFolder="Engine/" />
 		</Unit>
 		<Unit filename="src/mesh.h">
-			<Option virtualFolder="Engine/" />
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
-		<Unit filename="src/meshRenderer.cpp">
-			<Option virtualFolder="Engine/" />
-		</Unit>
-		<Unit filename="src/meshRenderer.h">
 			<Option virtualFolder="Engine/" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

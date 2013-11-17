@@ -1,13 +1,91 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="src/engine.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="353" topLine="0" />
+	<File name="src/basicShader.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="240" topLine="0" />
 	</File>
-	<File name="src/myGame.cpp" open="0" top="0" tabpos="0">
-		<Cursor position="308" topLine="0" />
+	<File name="src/basicShader.h" open="0" top="0" tabpos="0">
+		<Cursor position="309" topLine="0" />
+	</File>
+	<File name="src/camera.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="1406" topLine="36" />
+	</File>
+	<File name="src/camera.h" open="1" top="0" tabpos="3">
+		<Cursor position="824" topLine="9" />
+	</File>
+	<File name="src/component.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="408" topLine="0" />
+	</File>
+	<File name="src/component.h" open="0" top="0" tabpos="0">
+		<Cursor position="330" topLine="5" />
+	</File>
+	<File name="src/display.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="1629" topLine="47" />
+	</File>
+	<File name="src/display.h" open="0" top="0" tabpos="0">
+		<Cursor position="472" topLine="0" />
+	</File>
+	<File name="src/engine.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="1896" topLine="75" />
+	</File>
+	<File name="src/engine.h" open="0" top="0" tabpos="0">
+		<Cursor position="424" topLine="0" />
+	</File>
+	<File name="src/main.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="242" topLine="0" />
+	</File>
+	<File name="src/material.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="221" topLine="0" />
+	</File>
+	<File name="src/material.h" open="0" top="0" tabpos="0">
+		<Cursor position="858" topLine="0" />
+	</File>
+	<File name="src/math3d.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="3463" topLine="94" />
+	</File>
+	<File name="src/math3d.h" open="0" top="0" tabpos="1">
+		<Cursor position="228" topLine="0" />
+	</File>
+	<File name="src/mesh.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="7137" topLine="161" />
+	</File>
+	<File name="src/mesh.h" open="0" top="0" tabpos="3">
+		<Cursor position="1603" topLine="22" />
+	</File>
+	<File name="src/myGame.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="3907" topLine="23" />
+	</File>
+	<File name="src/renderer.cpp" open="0" top="0" tabpos="5">
+		<Cursor position="7698" topLine="248" />
+	</File>
+	<File name="src/renderer.h" open="0" top="0" tabpos="0">
+		<Cursor position="1941" topLine="9" />
+	</File>
+	<File name="src/shader.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="59" topLine="24" />
+	</File>
+	<File name="src/shader.h" open="0" top="0" tabpos="0">
+		<Cursor position="553" topLine="13" />
 	</File>
 	<File name="src/stb_image.c" open="0" top="0" tabpos="0">
 		<Cursor position="1754" topLine="24" />
+	</File>
+	<File name="src/texture.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="976" topLine="0" />
+	</File>
+	<File name="src/texture.h" open="0" top="0" tabpos="0">
+		<Cursor position="1086" topLine="0" />
+	</File>
+	<File name="src/timing.cpp" open="1" top="0" tabpos="7">
+		<Cursor position="484" topLine="7" />
+	</File>
+	<File name="src/timing.h" open="1" top="0" tabpos="6">
+		<Cursor position="214" topLine="0" />
+	</File>
+	<File name="src/transform.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="1596" topLine="31" />
+	</File>
+	<File name="src/transform.h" open="1" top="1" tabpos="1">
+		<Cursor position="541" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

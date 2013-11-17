@@ -24,7 +24,7 @@ public:
 	void operator=(const Shader& shader);
 
 	virtual void InitPass() = 0;
-	virtual void Update(Transform& transform, const Material& material) = 0;
+	virtual void Update(Transform& transform, Material& material) = 0;
 	virtual void Bind();
 protected:
     unsigned int m_Program;

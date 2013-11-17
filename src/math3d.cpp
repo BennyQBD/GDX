@@ -1,8 +1,5 @@
 #include "math3d.h"
 
-//#include "quaternion.h"
-//#include "util.h"
-
 const Vector3f Vector3f::UP(0,1,0);
 const Vector3f Vector3f::DOWN(0,-1,0);
 const Vector3f Vector3f::LEFT(-1,0,0);
@@ -57,7 +54,7 @@ Vector3f Vector3f::Rotate(const Quaternion& rotation) const
 {
     Quaternion rotatedVector = rotation * *this * rotation.Conjugate();
     
-    return Vector3f(rotatedVector.x, rotatedVector.y, rotatedVector.z);
+    return Vector3f(rotatedVector.GetX(), rotatedVector.GetY(), rotatedVector.GetZ());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,9 +66,9 @@ Matrix4f Matrix4f::InitTranslation(const Vector3f& translation)
 {
     Matrix4f r;
     
-	r.m[0][0] = 1.0f; r.m[0][1] = 0.0f; r.m[0][2] = 0.0f; r.m[0][3] = translation.x;
-    r.m[1][0] = 0.0f; r.m[1][1] = 1.0f; r.m[1][2] = 0.0f; r.m[1][3] = translation.y;
-    r.m[2][0] = 0.0f; r.m[2][1] = 0.0f; r.m[2][2] = 1.0f; r.m[2][3] = translation.z;
+	r.m[0][0] = 1.0f; r.m[0][1] = 0.0f; r.m[0][2] = 0.0f; r.m[0][3] = translation.GetX();
+    r.m[1][0] = 0.0f; r.m[1][1] = 1.0f; r.m[1][2] = 0.0f; r.m[1][3] = translation.GetY();
+    r.m[2][0] = 0.0f; r.m[2][1] = 0.0f; r.m[2][2] = 1.0f; r.m[2][3] = translation.GetZ();
     r.m[3][0] = 0.0f; r.m[3][1] = 0.0f; r.m[3][2] = 0.0f; r.m[3][3] = 1.0f;
     
     return r;
@@ -81,9 +78,9 @@ Matrix4f Matrix4f::InitRotation(const Vector3f& eulerAngles)
 {
 	Matrix4f rx, ry, rz;
 
-    const float x = ToRadians(eulerAngles.x);
-    const float y = ToRadians(eulerAngles.y);
-    const float z = ToRadians(eulerAngles.z);
+    const float x = ToRadians(eulerAngles.GetX());
+    const float y = ToRadians(eulerAngles.GetY());
+    const float z = ToRadians(eulerAngles.GetZ());
 
     rx.m[0][0] = 1.0f; rx.m[0][1] = 0.0f   ; rx.m[0][2] = 0.0f    ; rx.m[0][3] = 0.0f;
     rx.m[1][0] = 0.0f; rx.m[1][1] = cosf(x); rx.m[1][2] = -sinf(x); rx.m[1][3] = 0.0f;
@@ -107,31 +104,36 @@ Matrix4f Matrix4f::InitRotation(const Vector3f& eulerAngles)
 //{
 //	return Matrix4f(DirectX::XMMatrixRotationAxis(DirectX::XMVectorSet(axis.x, axis.y, axis.z, 0), angle));
 //}
-//
+
 Matrix4f Matrix4f::InitRotation(const Vector3f& forward, const Vector3f& up)
 {
-    Matrix4f r;
-    
 	Vector3f n = forward.Normalized();
     Vector3f u = up.Normalized().Cross(n);
     Vector3f v = n.Cross(u);
-       
-    r.m[0][0] = u.x;   r.m[0][1] = u.y;   r.m[0][2] = u.z;   r.m[0][3] = 0.0f;
-    r.m[1][0] = v.x;   r.m[1][1] = v.y;   r.m[1][2] = v.z;   r.m[1][3] = 0.0f;
-    r.m[2][0] = n.x;   r.m[2][1] = n.y;   r.m[2][2] = n.z;   r.m[2][3] = 0.0f;
-    r.m[3][0] = 0.0f;  r.m[3][1] = 0.0f;  r.m[3][2] = 0.0f;  r.m[3][3] = 1.0f;   
       
-    return r;   
+    return Matrix4f::InitRotation(n,v,u);
+}
+
+Matrix4f Matrix4f::InitRotation(const Vector3f& n, const Vector3f& v, const Vector3f& u)
+{
+    Matrix4f r;
+    
+    r.m[0][0] = u.GetX();   r.m[0][1] = u.GetY();   r.m[0][2] = u.GetZ();   r.m[0][3] = 0.0f;
+    r.m[1][0] = v.GetX();   r.m[1][1] = v.GetY();   r.m[1][2] = v.GetZ();   r.m[1][3] = 0.0f;
+    r.m[2][0] = n.GetX();   r.m[2][1] = n.GetY();   r.m[2][2] = n.GetZ();   r.m[2][3] = 0.0f;
+    r.m[3][0] = 0.0f;       r.m[3][1] = 0.0f;       r.m[3][2] = 0.0f;       r.m[3][3] = 1.0f; 
+    
+    return r;
 }
 
 Matrix4f Matrix4f::InitScale(const Vector3f& scale)
 {
     Matrix4f r;
     
-	r.m[0][0] = scale.x; r.m[0][1] = 0.0f;    r.m[0][2] = 0.0f;    r.m[0][3] = 0.0f;
-    r.m[1][0] = 0.0f;    r.m[1][1] = scale.y; r.m[1][2] = 0.0f;    r.m[1][3] = 0.0f;
-    r.m[2][0] = 0.0f;    r.m[2][1] = 0.0f;    r.m[2][2] = scale.z; r.m[2][3] = 0.0f;
-    r.m[3][0] = 0.0f;    r.m[3][1] = 0.0f;    r.m[3][2] = 0.0f;    r.m[3][3] = 1.0f;
+	r.m[0][0] = scale.GetX(); r.m[0][1] = 0.0f;         r.m[0][2] = 0.0f;         r.m[0][3] = 0.0f;
+    r.m[1][0] = 0.0f;         r.m[1][1] = scale.GetY(); r.m[1][2] = 0.0f;         r.m[1][3] = 0.0f;
+    r.m[2][0] = 0.0f;         r.m[2][1] = 0.0f;         r.m[2][2] = scale.GetZ(); r.m[2][3] = 0.0f;
+    r.m[3][0] = 0.0f;         r.m[3][1] = 0.0f;         r.m[3][2] = 0.0f;         r.m[3][3] = 1.0f;
     
     return r;
 }
@@ -164,6 +166,18 @@ Matrix4f Matrix4f::InitPerspective(float angle, float aspect, float zNear, float
     return r;
 }
 
+Matrix4f Matrix4f::InitOrthographic(float left, float right, float bottom, float top, float near, float far)
+{
+    Matrix4f m;
+    
+    m[0][0] = 2/(right - left);					m[0][1] = 0;								m[0][2] = 0;					m[0][3] = 0;
+    m[1][0] = 0;								m[1][1] = 2/(top - bottom);					m[1][2] = 0;					m[1][3] = 0;
+    m[2][0] = 0;								m[2][1] = 0;								m[2][2] = -2/(far - near);		m[2][3] = 0;
+    m[3][0] = -(right + left)/(right - left);	m[3][1] = -(top + bottom)/(top - bottom);	m[3][2] = -(far + near)/(far - near);	m[3][3] = 1;
+    
+    return m;
+}
+
 Matrix4f::Matrix4f()
 {
 	m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
@@ -172,9 +186,70 @@ Matrix4f::Matrix4f()
     m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
+/*
+ToQuaternion() reference implementation, in Java
+public Quaternion toQuaternion()
+	{
+		float trace = m[0][0] + m[1][1] + m[2][2];
+		
+		float w = 1;
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		  if( trace > 0 ) 
+		  {// I changed M_EPSILON to 0
+		    float s = 0.5f / (float)Math.sqrt(trace+ 1.0f);
+		    w = 0.25f / s;
+		    x = ( m[1][2] - m[2][1] ) * s;
+		    y = ( m[2][0] - m[0][2] ) * s;
+		    z = ( m[0][1] - m[1][0] ) * s;
+		  } 
+		  else 
+		  {
+		    if ( m[0][0] > m[1][1] && m[0][0] > m[2][2] ) 
+		    {
+		      float s = 2.0f * (float)Math.sqrt( 1.0f + m[0][0] - m[1][1] - m[2][2]);
+		      w = (m[1][2] - m[2][1] ) / s;
+		      x = 0.25f * s;
+		      y = (m[1][0] + m[0][1] ) / s;
+		     z = (m[2][0] + m[0][2] ) / s;
+		    } 
+		    else if (m[1][1] > m[2][2]) 
+		    {
+		      float s = 2.0f * (float)Math.sqrt( 1.0f + m[1][1] - m[0][0] - m[2][2]);
+		      w = (m[2][0] - m[0][2] ) / s;
+		      x = (m[1][0] + m[0][1] ) / s;
+		      y = 0.25f * s;
+		      z = (m[2][1] + m[1][2] ) / s;
+		    } 
+		    else 
+		    {
+		      float s = 2.0f * (float)Math.sqrt( 1.0f + m[2][2] - m[0][0] - m[1][1] );
+		      w = (m[0][1] - m[1][0] ) / s;
+		      x = (m[2][0] + m[0][2] ) / s;
+		      y = (m[1][2] + m[2][1] ) / s;
+		      z = 0.25f * s;
+		    }
+		  }
+		  
+		  return new Quaternion(x,y,z,w);
+	}
+*/
 ///////////////////////////////////////////////////////////////////////////////
 //QUATERNION SECTION
 ///////////////////////////////////////////////////////////////////////////////
+
+Quaternion Quaternion::RotationBetween(const Vector3f& from, const Vector3f& to)
+{
+    Vector3f H = (from + to).Normalized();
+
+    float w = from.Dot(H);
+    float x = from.GetY()*H.GetZ() - from.GetZ()*H.GetY();
+    float y = from.GetZ()*H.GetX() - from.GetX()*H.GetZ();
+    float z = from.GetX()*H.GetY() - from.GetY()*H.GetX();
+    
+    return Quaternion(x,y,z,w);
+}
 
 Quaternion::Quaternion(float _x, float _y, float _z, float _w)
 {
@@ -189,9 +264,9 @@ Quaternion::Quaternion(const Vector3f& axis, float angle)
     float sinHalfAngle = sinf(angle / 2);
 	float cosHalfAngle = cosf(angle / 2);
 
-    x = axis.x * sinHalfAngle;
-    y = axis.y * sinHalfAngle;
-    z = axis.z * sinHalfAngle;
+    x = axis.GetX() * sinHalfAngle;
+    y = axis.GetY() * sinHalfAngle;
+    z = axis.GetZ() * sinHalfAngle;
     w = cosHalfAngle;
 }
 
@@ -222,11 +297,47 @@ float Quaternion::Dot(const Quaternion& r) const
     return x * r.x + y * r.y + z * r.z + w * r.w;
 }
 
-#include <cassert>
+Quaternion Quaternion::NLerp(const Quaternion& dest, float amt) const
+{	
+    return *this + ((dest - *this) * amt).Normalized();
+}
 
-Quaternion Quaternion::Slerp(const Quaternion& dest, float amt) const
+Quaternion Quaternion::SLerp(const Quaternion& dest, float amt) const
 {
-    //TODO: Slerp implementation!
-    assert(0==0);
-    return Quaternion(0,0,0,0);
+    Quaternion r2 = dest;
+		
+    float dot = this->Dot(r2);
+		
+    if(dot < 0)
+    {
+        r2 = r2 * -1;
+        dot *= -1;
+    }
+		
+    if(dot > 0.9995f) //Too close for accurate slerp
+        return this->NLerp(r2, amt);
+		
+//	float theta = (float) (Math.acos(dot) * amt);
+//	
+//	float sininvamttheta = (float)Math.sin((1.0f - amt) * theta);
+//	float sinamttheta = (float)(Math.sin(theta * amt));
+//	float sintheta = (float)Math.sin(theta);
+//	
+//	Quaternion factor2 = r2.mul(sinamttheta).div(sintheta);
+//	
+//	return this.mul(sininvamttheta).add(factor2).normalized();
+		
+    if(dot > 1.0f)
+        dot = 1.0f;
+    if(dot < -1.0f)
+        dot = -1.0f;
+    
+    float theta = (float)(acos(dot) * amt);
+    float cosTheta = cos(theta);
+    float sinTheta = sin(theta);
+    
+    Quaternion res = dest - (*this * dot).Normalized();
+    
+    return ((*this * cosTheta) + (res * sinTheta)).Normalized();
+    //return this.mul((float)Math.cos(theta)).add(res.mul((float)Math.sin(theta))).normalized();
 }

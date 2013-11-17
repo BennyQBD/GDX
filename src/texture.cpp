@@ -5,7 +5,7 @@
 
 unsigned int Texture::m_LastBind = 0;
 
-Texture::Texture(const std::string& fileName, bool linearFiltering)
+Texture::Texture(const std::string& fileName, bool linearFiltering, bool repeatTexture)
 {
 	int x, y, numComponents;
     unsigned char* data = stbi_load(("./res/textures/" + fileName).c_str(), &x, &y, &numComponents, 4);
@@ -13,18 +13,18 @@ Texture::Texture(const std::string& fileName, bool linearFiltering)
     if(data == NULL)
         Display::Error("Unable to load texture: " + fileName);
 
-    InitTexture(x,y,data,linearFiltering);
+    InitTexture(x,y,data,linearFiltering, repeatTexture);
     stbi_image_free(data);
 }
 
-Texture::Texture(int width, int height, unsigned char* data, bool linearFiltering)
+Texture::Texture(int width, int height, unsigned char* data, bool linearFiltering, bool repeatTexture)
 {
-    InitTexture(width, height, data, linearFiltering);
+    InitTexture(width, height, data, linearFiltering, repeatTexture);
 }
 
-void Texture::InitTexture(int width, int height, unsigned char* data, bool linearFiltering)
+void Texture::InitTexture(int width, int height, unsigned char* data, bool linearFiltering, bool repeatTexture)
 {
-    m_TextureID = Engine::GetRenderer()->CreateTexture(width, height, data, linearFiltering);
+    m_TextureID = Engine::GetRenderer()->CreateTexture(width, height, data, linearFiltering, repeatTexture);
     
     if(m_TextureID != 0)
         m_Cleanup = true;

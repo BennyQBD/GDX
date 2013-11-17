@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "display.h"
 
 Camera::Camera(const Vector3f& pos, const Vector3f& forward, const Vector3f& up)
 {
@@ -48,37 +49,56 @@ void Camera::Yaw(float angle)
 	m_Forward = m_Forward.Rotate(m_Up, angle).Normalized();
 };
 
-Matrix4f Camera::ToMatrix()
+Matrix4f Camera::GetPositionRotation() const
 {
 	return Matrix4f::InitLookTo(m_Pos * -1, m_Forward, m_Up);
 }
 
-Vector3f Camera::GetForward()
+Matrix4f Camera::GetProjection() const
+{
+    return Matrix4f::IDENTITY;
+}
+
+Vector3f Camera::GetForward() const
 {
 	return m_Forward;
 }
 
-Vector3f Camera::GetBack()
+Vector3f Camera::GetBack() const
 {
 	return m_Forward * -1;
 }
 
-Vector3f Camera::GetRight()
+Vector3f Camera::GetRight() const
 {
 	return m_Up.Cross(m_Forward).Normalized();
 }
 
-Vector3f Camera::GetLeft()
+Vector3f Camera::GetLeft() const
 {
 	return m_Forward.Cross(m_Up).Normalized();
 }
 
-Vector3f Camera::GetUp()
+Vector3f Camera::GetUp() const
 {
 	return m_Up;
 }
 
-Vector3f Camera::GetDown()
+Vector3f Camera::GetDown() const
 {
 	return m_Up * -1;
+}
+
+//Perspective Camera
+PerspectiveCamera::PerspectiveCamera(const Vector3f& pos, const Vector3f& forward, const Vector3f& up,
+                                     float fov, float zNear, float zFar) : Camera(pos, forward, up)
+{
+    m_Fov = fov;
+    m_ZNear = zNear;
+    m_ZFar = zFar;
+}
+
+Matrix4f PerspectiveCamera::GetProjection() const
+{
+    return Matrix4f::InitPerspective(m_Fov, Display::GetAspect(), m_ZNear, m_ZFar);
 }

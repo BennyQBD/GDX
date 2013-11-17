@@ -2,6 +2,9 @@
 #define COMPONENT_H_INCLUDED
 
 class GameObject;
+class Mesh;
+class Material;
+class Shader;
 
 class Component
 {
@@ -14,8 +17,25 @@ protected:
 private:
 };
 
-class RenderingComponent : public Component {};
+
 class GameComponent : public Component {};
+
+class RenderingComponent : public Component
+{
+    public:
+	RenderingComponent(Mesh* pMesh = 0, Material* pMaterial = 0, Shader* pShader = 0);
+
+	virtual void Render(GameObject* pGameObject);
+	
+	inline Mesh* GetMesh() {return m_pMesh;}
+	inline Material* GetMaterial() {return m_pMaterial;}
+	inline Shader* GetShader() {return m_pShader;}
+protected:
+private:
+	Mesh* m_pMesh;
+	Material* m_pMaterial;
+	Shader* m_pShader;
+};
 
 class DefaultRenderingEngine : public RenderingComponent
 {

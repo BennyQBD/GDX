@@ -6,8 +6,10 @@ namespace Time
     void Init();
     double GetTime();
     
-    void SetDelta(double delta);
+    void Update(double delta);
+    
     double GetDelta();
+    double GetElapsedTime();
 };
 
 #endif // TIMING_H_INCLUDED
