@@ -11,15 +11,70 @@ Shader::Shader()
 	m_Cleanup = false;
 }
 
+#include <iostream>
+
 Shader::Shader(const std::string& fileName)
 {
-    std::string vertexShaderFile = fileName + ".vs";
-    std::string fragmentShaderFile = fileName + ".fs";
+    static const std::string MainMethodKey = "void main()";
+    static const std::string VertexShaderMainMethodKey = "void VSmain()";
+    static const std::string FragmentShaderMainMethodKey = "void FSmain()";
     
-    m_Shaders.push_back(Engine::GetRenderer()->CreateVertexShader(LoadShader(vertexShaderFile)));
-    m_Shaders.push_back(Engine::GetRenderer()->CreateFragmentShader(LoadShader(fragmentShaderFile)));
+    std::string shaderText = LoadShader(fileName + ".glsl");
     
-    m_Program = Engine::GetRenderer()->CreateShaderProgram(&m_Shaders[0], m_Shaders.size());;
+    size_t vertexShaderKeyLocation = shaderText.find(VertexShaderMainMethodKey);
+    size_t fragmentShaderKeyLocation = shaderText.find(FragmentShaderMainMethodKey);
+    
+    if(vertexShaderKeyLocation != std::string::npos)
+    {
+        std::string vertexShaderText = std::string(shaderText);
+        vertexShaderText.replace(vertexShaderKeyLocation,VertexShaderMainMethodKey.length(),MainMethodKey);
+        
+        //Removes Fragment Shader Main Function
+        if(fragmentShaderKeyLocation != std::string::npos)
+        {
+            //TODO: Find a more general way to find the end of the method
+            size_t begin = vertexShaderText.find(FragmentShaderMainMethodKey);
+            size_t end = vertexShaderText.find_last_of("}");
+            if (end != std::string::npos && begin <= end)
+                vertexShaderText.erase(begin, end-begin + 1);
+        }
+        
+        //std::cout << vertexShaderText << std::endl;
+        m_Shaders.push_back(Engine::GetRenderer()->CreateVertexShader(vertexShaderText));
+    }
+    
+    if(fragmentShaderKeyLocation != std::string::npos)
+    {
+        std::string fragmentShaderText = std::string(shaderText);
+        fragmentShaderText.replace(fragmentShaderKeyLocation,FragmentShaderMainMethodKey.length(),MainMethodKey);
+        
+        //Removes Vertex Shader Main Function
+        if(vertexShaderKeyLocation != std::string::npos)
+        {
+            //TODO: Find a more general way to find the end of the method
+            size_t begin = fragmentShaderText.find(VertexShaderMainMethodKey);
+            size_t end = fragmentShaderText.find_last_of("}", fragmentShaderKeyLocation);
+            if (end != std::string::npos && begin <= end)
+                fragmentShaderText.erase(begin, end-begin + 1);
+        }
+        
+        //Removes Attributes (invalid in fragment shaders)
+        size_t attributeLocation = fragmentShaderText.find("attribute");
+        while(attributeLocation != std::string::npos)
+        {
+            size_t begin = attributeLocation;
+            size_t end = fragmentShaderText.find(";", begin);
+            if (end != std::string::npos)
+                fragmentShaderText.erase(begin, end-begin + 1);
+            
+            attributeLocation = fragmentShaderText.find("attribute");
+        }
+        
+        //std::cout << fragmentShaderText << std::endl;
+        m_Shaders.push_back(Engine::GetRenderer()->CreateFragmentShader(fragmentShaderText));
+    }
+    
+    m_Program = Engine::GetRenderer()->CreateShaderProgram(&m_Shaders[0], m_Shaders.size());
 }
 
 Shader::~Shader()

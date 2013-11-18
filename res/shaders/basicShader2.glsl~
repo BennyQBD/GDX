@@ -16,5 +16,5 @@ void VSmain()
 
 void FSmain()
 {
-	gl_FragColor = texture2D(diffuse, texCoord0.xy);
+	gl_FragColor = texture2D(sampler, texCoord0.xy);
 }
