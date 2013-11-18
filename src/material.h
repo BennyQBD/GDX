@@ -32,9 +32,13 @@ public:
     
     inline void SetDiffuseTexture(const Texture& texture) {m_TextureMap[DiffuseTextureName] = &texture;}
     inline void SetColor(const Vector3f& color)           {m_Vector3fMap[ColorVector3fName] = color;}
+    
+    static inline int GetTextureUnit(const std::string& name) {return TextureUnits.at(name);}
 protected:
 private:
     static Texture DefaultTextureParameter;
+    static bool HasInitialisedTextureUnits;
+    static std::map<std::string, int> TextureUnits;
     std::map<std::string, const Texture*> m_TextureMap;
     std::map<std::string, Vector3f> m_Vector3fMap;
     std::map<std::string, float> m_FloatMap;

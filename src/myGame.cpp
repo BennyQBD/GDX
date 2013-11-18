@@ -3,7 +3,7 @@
 #include "engine.h"
 #include "transform.h"
 #include "mesh.h"
-#include "basicShader.h"
+#include "shader.h"
 #include "timing.h"
 #include "material.h"
 #include "input.h"
@@ -48,7 +48,7 @@ MyGame::MyGame()
     g_Texture = Texture("bricks.jpg");
     g_Material = Material(g_Texture);
 
-	g_MeshRenderer = RenderingComponent(&g_Mesh, &g_Material, BasicShader::GetInstance());
+	g_MeshRenderer = RenderingComponent(&g_Mesh, &g_Material, Shader::Get("basicShader"));
 
 	g_GameObject1 = GameObject(Transform(), &g_MeshRenderer);
 	g_GameObject2 = GameObject(Transform(Vector3f(), Quaternion(), Vector3f(0.3f, 0.3f, 0.3f)), &g_MeshRenderer);

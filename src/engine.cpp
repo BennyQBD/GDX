@@ -2,6 +2,7 @@
 #include "timing.h"
 #include "display.h"
 #include "input.h"
+#include "shader.h"
 
 #include <sstream>
 #include <SDL/SDL.h>
@@ -122,6 +123,8 @@ void CoreEngine::Start()
             SDL_Delay(1);
         }
 	}
+	
+	Shader::RemoveShaders();
 }
 
 void CoreEngine::Stop()

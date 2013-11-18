@@ -291,13 +291,13 @@
 	<sstream>
 	<cassert>
 
-1384120312 source:/home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.cpp
+1384745657 source:/home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.cpp
 	"basicShader.h"
 
-1384119137 /home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.h
+1384745629 /home/batman/Workspace/C_Workspace/3DEngine/src/basicShader.h
 	"shader.h"
 
-1384701749 /home/batman/Workspace/C_Workspace/3DEngine/src/shader.h
+1384748103 /home/batman/Workspace/C_Workspace/3DEngine/src/shader.h
 	"display.h"
 	"math3d.h"
 	"material.h"
@@ -316,7 +316,7 @@
 1384701478 /home/batman/Workspace/C_Workspace/3DEngine/src/math3d.h
 	<math.h>
 
-1384120994 /home/batman/Workspace/C_Workspace/3DEngine/src/material.h
+1384745931 /home/batman/Workspace/C_Workspace/3DEngine/src/material.h
 	"texture.h"
 	"math3d.h"
 	<map>
@@ -364,11 +364,12 @@
 	<SDL/SDL.h>
 	<iostream>
 
-1384705220 source:/home/batman/Workspace/C_Workspace/3DEngine/src/engine.cpp
+1384747834 source:/home/batman/Workspace/C_Workspace/3DEngine/src/engine.cpp
 	"engine.h"
 	"timing.h"
 	"display.h"
 	"input.h"
+	"shader.h"
 	<sstream>
 	<SDL/SDL.h>
 
@@ -416,13 +417,13 @@
 	"material.h"
 	"shader.h"
 
-1384705137 source:/home/batman/Workspace/C_Workspace/3DEngine/src/myGame.cpp
+1384748013 source:/home/batman/Workspace/C_Workspace/3DEngine/src/myGame.cpp
 	"myGame.h"
 	"input.h"
 	"engine.h"
 	"transform.h"
 	"mesh.h"
-	"basicShader.h"
+	"shader.h"
 	"timing.h"
 	"material.h"
 	"input.h"
@@ -441,11 +442,12 @@
 	<sstream>
 	<cassert>
 
-1384741452 source:/home/batman/Workspace/C_Workspace/3DEngine/src/shader.cpp
+1384747688 source:/home/batman/Workspace/C_Workspace/3DEngine/src/shader.cpp
 	"shader.h"
 	<sstream>
 	<cassert>
 	<iostream>
+	<stdexcept>
 
 1383912984 source:/home/batman/Workspace/C_Workspace/3DEngine/src/stb_image.c
 	"stb_image.h"
@@ -476,6 +478,6 @@
 
 1384705213 /home/batman/Workspace/C_Workspace/3DEngine/src/timing.h
 
-1384120733 source:/home/batman/Workspace/C_Workspace/3DEngine/src/material.cpp
+1384746046 source:/home/batman/Workspace/C_Workspace/3DEngine/src/material.cpp
 	"material.h"
 

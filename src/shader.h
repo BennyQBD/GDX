@@ -13,26 +13,38 @@
 #include <map>
 #include <iostream>
 
+struct UniformData
+{
+    unsigned int Location;
+    std::string Type;
+    std::string Name;
+    
+    UniformData(unsigned int UniformLocation, const std::string& UniformType, const std::string& UniformName)
+    {
+        Location = UniformLocation;
+        Type = UniformType;
+        Name = UniformName;
+    }
+};
+
 class Shader
 {
 public:
-	Shader();
-	Shader(const std::string& fileName);
+	void Update(Transform& transform, Material& material);
+	void Bind();
+	
+	static Shader* Get(const std::string& name);
+    static void RemoveShaders();
+private:
+    static std::map<std::string, Shader*> ShaderPrograms;
 
-	~Shader();
-	Shader(const Shader& shader);
-	void operator=(const Shader& shader);
-
-	virtual void InitPass() = 0;
-	virtual void Update(Transform& transform, Material& material) = 0;
-	virtual void Bind();
-protected:
     unsigned int m_Program;
     std::vector<unsigned int> m_Shaders;
-    std::map<std::string, unsigned int> m_Uniforms;
+    std::vector<UniformData> m_Uniforms;
+    bool m_IsValidated;
 	mutable bool m_Cleanup;
 	
-	void AddUniform(const std::string& uniform);
+	void AddUniform(const std::string& uniform, const std::string& uniformType);
 	void ValidateShader();
 	
 	inline std::string LoadShader(const std::string& fileName)
@@ -59,10 +71,12 @@ protected:
         return output;
 	}
 	
-	inline void SetInt(const std::string& name, int value) {Engine::GetRenderer()->SetUniformInt(m_Uniforms.at(name),value);}
-    inline void SetFloat(const std::string& name, float value) {Engine::GetRenderer()->SetUniformFloat(m_Uniforms.at(name),value);}
-    inline void SetVector3f(const std::string& name, const Vector3f& value) {Engine::GetRenderer()->SetUniformVector3f(m_Uniforms.at(name),value);}
-    inline void SetMatrix4f(const std::string& name, const Matrix4f& value) {Engine::GetRenderer()->SetUniformMatrix4f(m_Uniforms.at(name),value);}
+	Shader();
+    Shader(const std::string& fileName);
+    ~Shader();
+    
+    Shader(const Shader& shader) {};
+	void operator=(const Shader& shader) {};
 };
 
 #endif // SHADER_H_INCLUDED
