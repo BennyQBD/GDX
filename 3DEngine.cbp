@@ -5,7 +5,7 @@
 		<Option title="3DEngine" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Engine/;Game/;" />
+		<Option virtualFolders="Engine/;Game/;Libraries/;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/3DEngine" prefix_auto="1" extension_auto="1" />
@@ -44,13 +44,6 @@
 		<Linker>
 			<Add option="`sdl-config --libs`" />
 		</Linker>
-		<Unit filename="src/basicShader.cpp">
-			<Option virtualFolder="Engine/" />
-		</Unit>
-		<Unit filename="src/basicShader.h">
-			<Option virtualFolder="Engine/" />
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Unit filename="src/camera.cpp">
 			<Option virtualFolder="Engine/" />
 		</Unit>
@@ -144,10 +137,10 @@
 		</Unit>
 		<Unit filename="src/stb_image.c">
 			<Option compilerVar="CC" />
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Libraries/" />
 		</Unit>
 		<Unit filename="src/stb_image.h">
-			<Option virtualFolder="Engine/" />
+			<Option virtualFolder="Libraries/" />
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/texture.cpp">

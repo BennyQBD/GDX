@@ -45,7 +45,10 @@ private:
 	mutable bool m_Cleanup;
 	
 	void AddUniform(const std::string& uniform, const std::string& uniformType);
+	void AddUniforms(const std::string& shaderText);
 	void ValidateShader();
+	std::string GetSpecifiedVersion(const std::string& shaderText);
+	void EraseShaderFunction(std::string& shaderText, const std::string& functionHeader);
 	
 	inline std::string LoadShader(const std::string& fileName)
 	{

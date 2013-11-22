@@ -28,6 +28,8 @@ struct Vertex
             Format.nElements = sizeof(sizes)/sizeof(int);
             Format.ElementSizes = sizes;
             Format.VertexSize = sizeof(Vertex);
+            
+            FormatInitialized = true;
 		}
 	}
 	private:

@@ -91,17 +91,17 @@ Mesh::Mesh()
 
 Mesh::Mesh(Vertex* vertices, int nVertices, INDEX* indices, int nIndices, bool calcNormals, bool calcTangents, const VertexFormat& vertexFormat)
 {
+    if(calcNormals)
+        CalcNormals(vertices, nVertices, indices, nIndices);
+    if(calcTangents)
+        CalcTangents(vertices, nVertices, indices, nIndices);
+    
 	m_nVertices = nVertices;
 	m_nIndices = nIndices;
 	m_Cleanup = true;
     m_hVertexBuffer = Engine::GetRenderer()->CreateVertexBuffer(vertices, nVertices * sizeof(Vertex));
     m_hIndexBuffer =  Engine::GetRenderer()->CreateIndexBuffer(indices, nIndices * sizeof(int));
     m_pVertexFormat = &vertexFormat;
-    
-    if(calcNormals)
-        CalcNormals(vertices, nVertices, indices, nIndices);
-    if(calcTangents)
-        CalcTangents(vertices, nVertices, indices, nIndices);
 }
 
 Mesh::~Mesh()
