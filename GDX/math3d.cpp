@@ -200,6 +200,24 @@ Matrix4f::Matrix4f()
     m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
+Vector3f Matrix4f::GetTranslation() const
+{
+	return Vector3f(m[0][3], m[1][3], m[2][3]);
+}
+
+Vector3f Matrix4f::Transform(const Vector3f& r, float w) const
+{
+	//float x = r.GetX() * m[0][0] + r.GetY() * m[0][1] + r.GetZ() * m[0][2] + w * m[0][3];
+	//float y = r.GetX() * m[1][0] + r.GetY() * m[1][1] + r.GetZ() * m[1][2] + w * m[1][3];
+	//float z = r.GetX() * m[2][0] + r.GetY() * m[2][1] + r.GetZ() * m[2][2] + w * m[2][3];
+
+	float x = r.GetX() * m[0][0] + r.GetY() * m[1][0] + r.GetZ() * m[2][0] + w * m[3][0];
+	float y = r.GetX() * m[0][1] + r.GetY() * m[1][1] + r.GetZ() * m[2][1] + w * m[3][1];
+	float z = r.GetX() * m[0][2] + r.GetY() * m[1][2] + r.GetZ() * m[2][2] + w * m[3][2];
+
+	return Vector3f(x,y,z);
+}
+
 /*
 ToQuaternion() reference implementation, in Java
 public Quaternion toQuaternion()

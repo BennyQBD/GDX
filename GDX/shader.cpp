@@ -125,17 +125,26 @@ void Shader::Update(Transform& transform, Material& material)
 {
     for(std::vector<UniformData>::iterator it = m_Uniforms.begin(); it != m_Uniforms.end(); ++it)
     {
-        if(it->Name.compare("MVP") == 0)
-            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetMVP());
-		
-		if(it->Name.compare("transform") == 0)
-            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetModel());
-		
 		if(it->Type.compare("sampler2D") == 0)
 		{
 		    int unit = Material::GetTextureUnit(it->Name);
             material.GetTexture(it->Name)->Bind(unit);
             Engine::GetRenderer()->SetUniformInt(it->Location, unit);
+		}
+        else if(it->Name.compare("MVP") == 0)
+            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetMVP());
+		else if(it->Name.compare("transform") == 0)
+            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetModel());
+		else if(it->Name.compare("eyePos") == 0)
+			Engine::GetRenderer()->SetUniformVector3f(it->Location, Transform::GetEyePosition());
+		else
+		{
+			if(it->Type.compare("float") == 0)
+				Engine::GetRenderer()->SetUniformFloat(it->Location, material.GetFloat(it->Name));
+			else if(it->Type.compare("vec3") == 0)
+				Engine::GetRenderer()->SetUniformVector3f(it->Location, material.GetVector3f(it->Name));
+			else
+				Display::Error("Type " + it->Type + " not currently supported for uniform " + it->Name);
 		}
     }
     

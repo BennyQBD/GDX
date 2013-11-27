@@ -26,6 +26,7 @@ public:
 	Vector3f GetLeft() const;
 	Vector3f GetUp() const;
 	Vector3f GetDown() const;
+	Vector3f GetPos() const;
 protected:
 private:
 	Vector3f m_Pos;

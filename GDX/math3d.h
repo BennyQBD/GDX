@@ -174,6 +174,9 @@ public:
     
     Matrix4f Transpose() const;             //TODO: Implement!
     //Quaternion ToQuaternion() const;      //Possible future method!
+	Vector3f GetTranslation() const;
+	Vector3f Transform(const Vector3f& right, float w = 1.0f) const;
+	Vector3f GetPositionFromUnscaledMatrix() const {return this->Transform(this->GetTranslation() * -1, 0.0f);}
     
     inline Matrix4f operator*(const Matrix4f& right) const
     {

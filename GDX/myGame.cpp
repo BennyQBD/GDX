@@ -43,6 +43,9 @@ MyGame::MyGame()
 	g_GameObject1 = GameObject(Transform(), RenderingComponent::Create("ShadedEgg", Mesh::Get("egg1.obj"), Material::Create("brick", Texture::Get("bricks.jpg")), Shader::Get("phongShader")));
 	g_GameObject2 = GameObject(Transform(Vector3f(), Quaternion(), Vector3f(0.3f, 0.3f, 0.3f)), RenderingComponent::Get("ShadedEgg"));
 	g_Camera = PerspectiveCamera(Vector3f(0, 1, -5), Vector3f::FORWARD, Vector3f::UP, ToRadians(70.0f), 0.01f, 1000.0f);
+
+	Material::Get("brick")->AddFloat("specularIntensity", 2.0f);
+	Material::Get("brick")->AddFloat("specularPower", 32.0f);
 }
 
 MyGame::~MyGame()

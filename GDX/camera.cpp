@@ -89,6 +89,11 @@ Vector3f Camera::GetDown() const
 	return m_Up * -1;
 }
 
+Vector3f Camera::GetPos() const
+{
+	return m_Pos;
+}
+
 //Perspective Camera
 PerspectiveCamera::PerspectiveCamera(const Vector3f& pos, const Vector3f& forward, const Vector3f& up,
                                      float fov, float zNear, float zFar) : Camera(pos, forward, up)

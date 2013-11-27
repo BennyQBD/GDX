@@ -1,5 +1,6 @@
 #include "transform.h"
 
+Vector3f Transform::EyePosition = Vector3f(0,0,0);
 Matrix4f Transform::View = Matrix4f();
 Matrix4f Transform::Projection = Matrix4f();
 Matrix4f Transform::ViewProjection = Matrix4f();
@@ -57,14 +58,20 @@ void Transform::CalcViewProjection(const Camera& camera)
 
 void Transform::CalcViewProjection(const Matrix4f& view, const Matrix4f& projection)
 {
-    Transform::View = view;
-    Transform::Projection = projection;
+    SetView(view);
+    SetProjection(projection);
     CalcViewProjection();
+}
+
+Vector3f Transform::GetEyePosition()
+{
+	return Transform::EyePosition;
 }
 
 void Transform::SetView(const Matrix4f& view)
 {
     Transform::View = view;
+	EyePosition = view.GetPositionFromUnscaledMatrix();
 }
 
 void Transform::SetProjection(const Matrix4f& projection)

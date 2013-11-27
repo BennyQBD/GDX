@@ -22,10 +22,12 @@ public:
 	static void CalcViewProjection(const Camera& camera);
 	static void CalcViewProjection(const Matrix4f& view, const Matrix4f& projection);
 	
+	static Vector3f GetEyePosition();
 	static void SetView(const Matrix4f& view);
 	static void SetProjection(const Matrix4f& projection);
 protected:
 private:
+	static Vector3f EyePosition;
     static Matrix4f View;
 	static Matrix4f Projection;
 	static Matrix4f ViewProjection;

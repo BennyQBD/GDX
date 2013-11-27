@@ -6,10 +6,23 @@ attribute vec3 normal;
 
 varying vec2 texCoord0;
 varying vec3 normal0;
+varying vec3 worldPos0;
 
 uniform mat4 MVP;
 uniform mat4 transform;
+uniform vec3 eyePos;
 uniform sampler2D diffuse;
+
+uniform float specularIntensity;
+uniform float specularPower;
+
+void VSmain()
+{
+	gl_Position = MVP * vec4(position, 1.0);
+	texCoord0 = texCoord;
+	normal0 = (transform * vec4(normal, 0.0)).xyz;
+	worldPos0 = (transform * vec4(position, 1.0)).xyz;
+}
 
 struct BaseLight
 {
@@ -25,40 +38,24 @@ struct DirectionalLight
 
 vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal)
 {
-    float diffuseFactor = dot(normal, -direction);
+    float diffuseFactor = clamp(dot(normal, -direction), 0.0, 1.0);
     
-    vec4 diffuseColor = vec4(0,0,0,0);
-    //vec4 specularColor = vec4(0,0,0,0);
+    vec4 diffuseColor = vec4(base.color, 1.0) * base.intensity * diffuseFactor;
+        
+    vec3 directionToEye = normalize(eyePos - worldPos0);
+    vec3 reflectDirection = normalize(reflect(direction, normal));
+        
+    float specularFactor = clamp(dot(directionToEye, reflectDirection), 0.0, 1.0);
+    specularFactor = pow(specularFactor, specularPower);
+        
+    vec4 specularColor = vec4(base.color, 1.0) * specularIntensity * specularFactor;
     
-    if(diffuseFactor > 0)
-    {
-        diffuseColor = vec4(base.color, 1.0) * base.intensity * diffuseFactor;
-        
-        //vec3 directionToEye = normalize(eyePos - worldPos0);
-        //vec3 reflectDirection = normalize(reflect(direction, normal));
-        
-        //float specularFactor = dot(directionToEye, reflectDirection);
-        //specularFactor = pow(specularFactor, specularPower);
-        
-        //if(specularFactor > 0)
-        //{
-        //    specularColor = vec4(base.color, 1.0) * specularIntensity * specularFactor;
-        //}
-    }
-    
-    return diffuseColor;// + specularColor;
+    return diffuseColor + specularColor;
 }
 
 vec4 CalcDirectionalLight(DirectionalLight directionalLight, vec3 normal)
 {
     return CalcLight(directionalLight.base, -directionalLight.direction, normal);
-}
-
-void VSmain()
-{
-	gl_Position = MVP * vec4(position, 1.0);
-	texCoord0 = texCoord;
-	normal0 = (transform * vec4(normal, 0.0)).xyz;
 }
 
 void FSmain()
