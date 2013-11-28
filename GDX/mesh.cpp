@@ -1,8 +1,9 @@
 #include "mesh.h"
 #include "engine.h"
+#include "util.h"
 
 #include <fstream>
-#include <sstream>
+#include <algorithm>
 
 bool Vertex::FormatInitialized = false;
 VertexFormat Vertex::Format = VertexFormat();
@@ -58,19 +59,6 @@ Mesh::Mesh(Vertex* vertices, int nVertices, INDEX* indices, int nIndices, bool c
     m_pVertexFormat = &vertexFormat;
 }
 
-std::vector<std::string> split(const std::string &s, char delim) 
-{
-    std::vector<std::string> elems;
-    std::stringstream ss(s);
-    std::string item;
-
-    while (std::getline(ss, item, delim))
-        elems.push_back(item);
-
-    return elems;
-    return elems;
-}
-
 struct OBJIndex
 {
 	unsigned int vertexIndex;
@@ -80,7 +68,7 @@ struct OBJIndex
 
 static OBJIndex CreateOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals)
 {
-	std::vector<std::string> vert = split(token, '/');
+	std::vector<std::string> vert = Util::Split(token, '/');
 
 	OBJIndex result;
 	result.vertexIndex = std::stoi(vert[0]) - 1;
@@ -101,39 +89,47 @@ static OBJIndex CreateOBJIndex(const std::string& token, bool* hasUVs, bool* has
 	return result;
 }
 
-#include <algorithm>
-
 bool CompareOBJIndex(const OBJIndex& a, const OBJIndex& b)
 {
-	return a.vertexIndex < b .vertexIndex;
+	return a.vertexIndex < b.vertexIndex;
 }
 
 int FindPreviousVertexIndex(const std::vector<OBJIndex>& indicesList, const OBJIndex& currentIndex, int i, 
-							bool hasUVs, bool hasNormals, const std::map<int, int>& indexMap, const std::vector<OBJIndex>& originalIndexList)
+							bool hasUVs, bool hasNormals, const std::vector<OBJIndex>& originalIndexList)
 {
+	//for(int j = 0; j < i; j++)
+	//{
+	//	OBJIndex previousIndex = originalIndexList[j];
+	//	if(previousIndex.vertexIndex == currentIndex.vertexIndex
+	//		&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
+	//		&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
+	//	{
+	//		return j;
+	//	}
+	//}
+
+	//return -1;
+	
 	int previousVertexStart = 0;
 	int previousVertexEnd = indicesList.size();
 	int previousVertexCurrent = (previousVertexEnd - previousVertexStart) / 2 + previousVertexStart;
 	int previousVertexBefore = previousVertexCurrent - 1;
 	
-	while(previousVertexBefore != previousVertexCurrent)	//Performs a binary search over the sorted list
+	while(previousVertexBefore != previousVertexCurrent) //Performs a binary search over the sorted list
 	{
 		OBJIndex previousIndex = indicesList[previousVertexCurrent];
 		if(previousIndex.vertexIndex == currentIndex.vertexIndex
 			&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
 			&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
 		{
-			if(indexMap.find(previousVertexCurrent) != indexMap.end())
+			for(int j = 0; j < i; j++) //It's okay to do a linear search now, because most cases won't make it here
 			{
-				for(int j = 0; j < i; j++)	//It's okay to do a linear search now, because most indices won't match.
+				OBJIndex previousIndex = originalIndexList[j];
+				if(previousIndex.vertexIndex == currentIndex.vertexIndex
+					&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
+					&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
 				{
-					OBJIndex previousIndex = originalIndexList[j];
-					if(previousIndex.vertexIndex == currentIndex.vertexIndex
-						&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
-						&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
-					{
-						return j;
-					}
+					return j;
 				}
 			}
 
@@ -141,7 +137,7 @@ int FindPreviousVertexIndex(const std::vector<OBJIndex>& indicesList, const OBJI
 		}
 		else
 		{
-			if(previousIndex.vertexIndex > currentIndex.vertexIndex)
+			if(previousIndex.vertexIndex < currentIndex.vertexIndex)
 				previousVertexStart = previousVertexCurrent;
 			else
 				previousVertexEnd = previousVertexCurrent;
@@ -156,112 +152,169 @@ int FindPreviousVertexIndex(const std::vector<OBJIndex>& indicesList, const OBJI
 	return -1;
 }
 
+void OldMeshOBJLoadConstructor()
+{
+	//std::vector<OBJIndex> OBJIndices;
+	//std::vector<Vector3f> vertices;
+	//std::vector<Vector2f> uvs;
+	//std::vector<Vector3f> normals;
+
+	//std::ifstream file;
+ //   file.open(("./res/models/" + fileName).c_str());
+
+ //   std::string line;
+
+	//bool hasUVs = false;
+	//bool hasNormals = false;
+
+ //   if(file.is_open())
+ //   {
+ //       while(file.good())
+ //       {
+	//		getline(file, line);
+	//		std::vector<std::string> tokens = Util::Split(line, ' ');
+
+	//		if(tokens.size() == 0)
+	//			continue;
+
+	//		if(tokens[0].compare("v") == 0)
+	//			vertices.push_back(Vector3f(std::stof(tokens[1]),std::stof(tokens[2]),std::stof(tokens[3])));
+	//		else if(tokens[0].compare("vt") == 0)
+	//			uvs.push_back(Vector2f(std::stof(tokens[1]),std::stof(tokens[2])));
+	//		else if(tokens[0].compare("vn") == 0)
+	//			normals.push_back(Vector3f(std::stof(tokens[1]),std::stof(tokens[2]),std::stof(tokens[3])));
+	//		else if(tokens[0].compare("f") == 0)
+	//		{
+	//			OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
+	//			OBJIndices.push_back(CreateOBJIndex(tokens[2], &hasUVs, &hasNormals));
+	//			OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
+
+	//			if((int)tokens.size() > 4)
+	//			{
+	//				OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
+	//				OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
+	//				OBJIndices.push_back(CreateOBJIndex(tokens[4], &hasUVs, &hasNormals));
+	//			}
+	//		}
+ //       }
+ //   }
+ //   else
+ //   {
+ //       Engine::GetDisplay()->Error("Unable to load mesh: " + fileName);
+ //   }
+
+	//std::vector<Vertex> vertexList;
+	//std::vector<INDEX> indexList;
+	//
+	//std::map<int, int> indexMap;
+
+	//std::vector<OBJIndex> indexLookup = std::vector<OBJIndex>(OBJIndices);
+	//std::sort(indexLookup.begin(), indexLookup.end(), CompareOBJIndex);
+
+	//for(int i = 0; i < (int)OBJIndices.size(); i++)
+	//{
+	//	OBJIndex currentIndex = OBJIndices[i];
+
+	//	//Note that previousVertexLocation is purely for mesh optimization purposes. (However it helps with calculated normals)
+	//	//If you wish, you can set this to -1 and remove the sorting code for a marginal performance boost (from O(NlogN) to O(N))
+	//	//For context, in a test with a 1 million triangle mesh, this reduced load time from 16 seconds to 13 seconds.
+	//	int previousVertexLocation = FindPreviousVertexIndex(indexLookup, currentIndex, i, hasUVs, hasNormals, OBJIndices);
+
+	//	if(previousVertexLocation == -1)
+	//	{
+	//		indexMap.insert(std::pair<int, int>(i, vertexList.size()));
+	//		indexList.push_back(vertexList.size());
+
+	//		Vector3f pos = vertices[currentIndex.vertexIndex];
+	//		Vector2f texCoord;
+	//		Vector3f normal;
+
+	//		if(hasUVs)
+	//			texCoord = uvs[currentIndex.uvIndex];
+	//		else
+	//			texCoord = Vector2f(0,0);
+
+	//		if(hasNormals)
+	//			normal = normals[currentIndex.normalIndex];
+	//		else
+	//			normal = Vector3f(0,0,0);
+
+	//		vertexList.push_back(Vertex(pos,texCoord,normal));
+	//	}
+	//	else
+	//		indexList.push_back(indexMap.at(previousVertexLocation));
+	//}
+
+	//if(!hasUVs)
+	//	CalcTexCoords(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
+	//if(!hasNormals)
+	//	CalcNormals(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
+
+	//CalcTangents(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
+
+	//m_nVertices = vertexList.size();
+	//m_nIndices = indexList.size();
+ //   m_hVertexBuffer = Engine::GetRenderer()->CreateVertexBuffer(&vertexList[0], m_nVertices * sizeof(Vertex));
+ //   m_hIndexBuffer =  Engine::GetRenderer()->CreateIndexBuffer(&indexList[0], m_nIndices * sizeof(int));
+	//m_pVertexFormat = &Vertex::Format;
+}
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 Mesh::Mesh(const std::string& fileName)
 {
-	//std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-	std::vector<OBJIndex> OBJIndices;
-	std::vector<Vector3f> vertices;
-	std::vector<Vector2f> uvs;
-	std::vector<Vector3f> normals;
+	std::string fullFileName = "./res/models/" + fileName;
 
-	std::ifstream file;
-    file.open(("./res/models/" + fileName).c_str());
+	Assimp::Importer Importer;
 
-    std::string line;
+	const aiScene* pScene = Importer.ReadFile(fullFileName.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals);
 
-	bool hasUVs = false;
-	bool hasNormals = false;
-
-    if(file.is_open())
-    {
-        while(file.good())
-        {
-			getline(file, line);
-			std::vector<std::string> tokens = split(line, ' ');
-
-			if(tokens.size() == 0)
-				continue;
-
-			if(tokens[0].compare("v") == 0)
-				vertices.push_back(Vector3f(std::stof(tokens[1]),std::stof(tokens[2]),std::stof(tokens[3])));
-			else if(tokens[0].compare("vt") == 0)
-				uvs.push_back(Vector2f(std::stof(tokens[1]),std::stof(tokens[2])));
-			else if(tokens[0].compare("vn") == 0)
-				normals.push_back(Vector3f(std::stof(tokens[1]),std::stof(tokens[2]),std::stof(tokens[3])));
-			else if(tokens[0].compare("f") == 0)
-			{
-				OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
-				OBJIndices.push_back(CreateOBJIndex(tokens[2], &hasUVs, &hasNormals));
-				OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
-
-				if((int)tokens.size() > 4)
-				{
-					OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
-					OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
-					OBJIndices.push_back(CreateOBJIndex(tokens[4], &hasUVs, &hasNormals));
-				}
-			}
-        }
-    }
-    else
-    {
-        Engine::GetDisplay()->Error("Unable to load mesh: " + fileName);
-    }
-
-	std::vector<Vertex> vertexList;
-	std::vector<INDEX> indexList;
-	
-	std::map<int, int> indexMap;
-
-	std::vector<OBJIndex> indexLookup = std::vector<OBJIndex>(OBJIndices);
-	std::sort(indexLookup.begin(), indexLookup.end(), CompareOBJIndex);
-
-	for(int i = 0; i < (int)OBJIndices.size(); i++)
+	if(pScene)
 	{
-		OBJIndex currentIndex = OBJIndices[i];
+		std::vector<Vertex> vertices;
+		std::vector<INDEX> indices;
 
-		//Note that previousVertexLocation is purely for mesh optimization purposes.
-		//If you wish, you can set this to -1 and remove the sorting code for a marginal performance boost (from O(NlogN) to O(N))
-		//For context, in a test with a 1 million triangle mesh, this reduced load time from 16 seconds to 13 seconds.
-		int previousVertexLocation = FindPreviousVertexIndex(indexLookup, currentIndex, i, hasUVs, hasNormals, indexMap, OBJIndices);
-
-		if(previousVertexLocation == -1)
+		for(unsigned int i = 0; i < 1; i++) //TODO: i < pScene->mNumMeshes
 		{
-			indexMap.insert(std::pair<int, int>(i, vertexList.size()));
-			indexList.push_back(vertexList.size());
+			const aiMesh* paiMesh = pScene->mMeshes[i];
+			const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
-			Vector3f pos = vertices[currentIndex.vertexIndex];
-			Vector2f texCoord;
-			Vector3f normal;
+			for(unsigned int j = 0; j < paiMesh->mNumVertices; j++)
+			{
+				const aiVector3D* pPos = &(paiMesh->mVertices[j]);
+				const aiVector3D* pNormal = &(paiMesh->mNormals[j]);
+				const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ?
+					&(paiMesh->mTextureCoords[0][j]) : &Zero3D;
 
-			if(hasUVs)
-				texCoord = uvs[currentIndex.uvIndex];
-			else
-				texCoord = Vector2f(0,0);
+				Vector3f pos = Vector3f(pPos->x, pPos->y, pPos->z);
+				Vector2f texCoord = Vector2f(pTexCoord->x, pTexCoord->y);
+				Vector3f normal = Vector3f(pNormal->x, pNormal->y, pNormal->z);
 
-			if(hasNormals)
-				normal = normals[currentIndex.normalIndex];
-			else
-				normal = Vector3f(0,0,0);
+				vertices.push_back(Vertex(pos, texCoord, normal));
+			}
 
-			vertexList.push_back(Vertex(pos,texCoord,normal));
+			for(unsigned int j = 0; j < paiMesh->mNumFaces; j++)
+			{
+				const aiFace& rFace = paiMesh->mFaces[j];
+				indices.push_back(rFace.mIndices[0]);
+				indices.push_back(rFace.mIndices[1]);
+				indices.push_back(rFace.mIndices[2]);
+			}
 		}
-		else
-			indexList.push_back(indexMap.at(previousVertexLocation));
+
+		m_nVertices = vertices.size();
+		m_nIndices = indices.size();
+		m_hVertexBuffer = Engine::GetRenderer()->CreateVertexBuffer(&vertices[0], m_nVertices * sizeof(Vertex));
+		m_hIndexBuffer =  Engine::GetRenderer()->CreateIndexBuffer(&indices[0], m_nIndices * sizeof(int));
+		m_pVertexFormat = &Vertex::Format;
+	}
+	else
+	{
+		Engine::GetDisplay()->Error("Unable to load mesh: " + fileName);
 	}
 
-	if(!hasUVs)
-		CalcTexCoords(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
-	if(!hasNormals)
-		CalcNormals(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
-
-	CalcTangents(&vertexList[0],vertexList.size(),&indexList[0],indexList.size());
-
-	m_nVertices = vertexList.size();
-	m_nIndices = indexList.size();
-    m_hVertexBuffer = Engine::GetRenderer()->CreateVertexBuffer(&vertexList[0], m_nVertices * sizeof(Vertex));
-    m_hIndexBuffer =  Engine::GetRenderer()->CreateIndexBuffer(&indexList[0], m_nIndices * sizeof(int));
-	m_pVertexFormat = &Vertex::Format;
 }
 
 Mesh::~Mesh()

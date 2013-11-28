@@ -47,6 +47,7 @@ private:
     std::map<std::string, float> m_FloatMap;
 
 	Material(Texture* diffuse = 0, const Vector3f& color = Vector3f(1,1,1));
+	Material(const std::string& fileName);
 };
 
 #endif // MATERIAL_H_INCLUDED
