@@ -71,9 +71,95 @@ std::vector<std::string> split(const std::string &s, char delim)
     return elems;
 }
 
+struct OBJIndex
+{
+	unsigned int vertexIndex;
+	unsigned int uvIndex;
+	unsigned int normalIndex;
+};
+
+static OBJIndex CreateOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals)
+{
+	std::vector<std::string> vert = split(token, '/');
+
+	OBJIndex result;
+	result.vertexIndex = std::stoi(vert[0]) - 1;
+	result.uvIndex = 0;
+	result.normalIndex = 0;
+
+	if(vert.size() > 1 && vert[1].compare("") != 0)
+	{
+		result.uvIndex = std::stoi(vert[1]) - 1;
+		*hasUVs = true;
+	}
+	else if(vert.size() > 2 && vert[2].compare("") != 0)
+	{
+		result.normalIndex = std::stoi(vert[2]) - 1;
+		*hasNormals = true;
+	}
+
+	return result;
+}
+
+#include <algorithm>
+
+bool CompareOBJIndex(const OBJIndex& a, const OBJIndex& b)
+{
+	return a.vertexIndex < b .vertexIndex;
+}
+
+int FindPreviousVertexIndex(const std::vector<OBJIndex>& indicesList, const OBJIndex& currentIndex, int i, 
+							bool hasUVs, bool hasNormals, const std::map<int, int>& indexMap, const std::vector<OBJIndex>& originalIndexList)
+{
+	int previousVertexStart = 0;
+	int previousVertexEnd = indicesList.size();
+	int previousVertexCurrent = (previousVertexEnd - previousVertexStart) / 2 + previousVertexStart;
+	int previousVertexBefore = previousVertexCurrent - 1;
+	
+	while(previousVertexBefore != previousVertexCurrent)	//Performs a binary search over the sorted list
+	{
+		OBJIndex previousIndex = indicesList[previousVertexCurrent];
+		if(previousIndex.vertexIndex == currentIndex.vertexIndex
+			&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
+			&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
+		{
+			if(indexMap.find(previousVertexCurrent) != indexMap.end())
+			{
+				for(int j = 0; j < i; j++)	//It's okay to do a linear search now, because most indices won't match.
+				{
+					OBJIndex previousIndex = originalIndexList[j];
+					if(previousIndex.vertexIndex == currentIndex.vertexIndex
+						&& (!hasUVs || previousIndex.uvIndex == currentIndex.uvIndex)
+						&& (!hasNormals || previousIndex.normalIndex == currentIndex.normalIndex))
+					{
+						return j;
+					}
+				}
+			}
+
+			return -1;
+		}
+		else
+		{
+			if(previousIndex.vertexIndex > currentIndex.vertexIndex)
+				previousVertexStart = previousVertexCurrent;
+			else
+				previousVertexEnd = previousVertexCurrent;
+		}
+		previousVertexBefore = previousVertexCurrent;
+		previousVertexCurrent = (previousVertexEnd - previousVertexStart) / 2 + previousVertexStart;
+	}
+
+	//Note: For "perfect" mesh optimization, you would need to do a linear search here just in case 2 indices had the same vertex index
+	//However, the marginal gain for such a rare case probably isn't worth the performance cost.
+
+	return -1;
+}
+
 Mesh::Mesh(const std::string& fileName)
 {
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+	//std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+	std::vector<OBJIndex> OBJIndices;
 	std::vector<Vector3f> vertices;
 	std::vector<Vector2f> uvs;
 	std::vector<Vector3f> normals;
@@ -104,29 +190,22 @@ Mesh::Mesh(const std::string& fileName)
 				normals.push_back(Vector3f(std::stof(tokens[1]),std::stof(tokens[2]),std::stof(tokens[3])));
 			else if(tokens[0].compare("f") == 0)
 			{
-				for(int i = 1; i < (int)tokens.size(); i++)
+				OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
+				OBJIndices.push_back(CreateOBJIndex(tokens[2], &hasUVs, &hasNormals));
+				OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
+
+				if((int)tokens.size() > 4)
 				{
-					std::vector<std::string> vert = split(tokens[i], '/');
-
-					vertexIndices.push_back(std::stoi(vert[0]) - 1);
-
-					if(vert.size() > 1 && vert[1].compare("") != 0)
-					{
-						uvIndices.push_back(std::stoi(vert[1]) - 1);
-						hasUVs = true;
-					}
-					else if(vert.size() > 2 && vert[2].compare("") != 0)
-					{
-						normalIndices.push_back(std::stoi(vert[2]) - 1);
-						hasNormals = true;
-					}
+					OBJIndices.push_back(CreateOBJIndex(tokens[1], &hasUVs, &hasNormals));
+					OBJIndices.push_back(CreateOBJIndex(tokens[3], &hasUVs, &hasNormals));
+					OBJIndices.push_back(CreateOBJIndex(tokens[4], &hasUVs, &hasNormals));
 				}
 			}
         }
     }
     else
     {
-        Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
+        Engine::GetDisplay()->Error("Unable to load mesh: " + fileName);
     }
 
 	std::vector<Vertex> vertexList;
@@ -134,46 +213,34 @@ Mesh::Mesh(const std::string& fileName)
 	
 	std::map<int, int> indexMap;
 
-	for(int i = 0; i < (int)vertexIndices.size(); i++)
+	std::vector<OBJIndex> indexLookup = std::vector<OBJIndex>(OBJIndices);
+	std::sort(indexLookup.begin(), indexLookup.end(), CompareOBJIndex);
+
+	for(int i = 0; i < (int)OBJIndices.size(); i++)
 	{
-		unsigned int vertexIndex = vertexIndices[i];
-		unsigned int uvIndex = 0; 
-		unsigned int normalIndex = 0;
+		OBJIndex currentIndex = OBJIndices[i];
 
-		if(hasUVs)
-			uvIndex = uvIndices[i];
-		if(hasNormals)
-			normalIndex = normalIndices[i];
-
-		int previousVertexLocation = -1;
-
-		for(int j = 0; j < i; j++)
-		{
-			if(vertexIndices[j] == vertexIndex
-				&& (!hasUVs || uvIndices[j] == uvIndex)
-				&& (!hasNormals || normalIndices[j] == normalIndex))
-			{
-				previousVertexLocation = j;
-				break;
-			}
-		}
+		//Note that previousVertexLocation is purely for mesh optimization purposes.
+		//If you wish, you can set this to -1 and remove the sorting code for a marginal performance boost (from O(NlogN) to O(N))
+		//For context, in a test with a 1 million triangle mesh, this reduced load time from 16 seconds to 13 seconds.
+		int previousVertexLocation = FindPreviousVertexIndex(indexLookup, currentIndex, i, hasUVs, hasNormals, indexMap, OBJIndices);
 
 		if(previousVertexLocation == -1)
 		{
 			indexMap.insert(std::pair<int, int>(i, vertexList.size()));
 			indexList.push_back(vertexList.size());
 
-			Vector3f pos = vertices[vertexIndex];
+			Vector3f pos = vertices[currentIndex.vertexIndex];
 			Vector2f texCoord;
 			Vector3f normal;
 
 			if(hasUVs)
-				texCoord = uvs[uvIndex];
+				texCoord = uvs[currentIndex.uvIndex];
 			else
 				texCoord = Vector2f(0,0);
 
 			if(hasNormals)
-				normal = normals[normalIndex];
+				normal = normals[currentIndex.normalIndex];
 			else
 				normal = Vector3f(0,0,0);
 
