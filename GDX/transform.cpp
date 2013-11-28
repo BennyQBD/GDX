@@ -10,9 +10,9 @@ Transform::Transform(const Vector3f& pos, const Quaternion& rotation, const Vect
 	Pos = pos;
 	Rotation = rotation;
 	Scale = scale;
-	m_Model = Matrix4f::IDENTITY;
-	m_MVP = Matrix4f::IDENTITY;
-	m_ChildModel = Matrix4f::IDENTITY;
+	m_Model = Matrix4f();//Matrix4f::IDENTITY;
+	m_MVP = Matrix4f();//Matrix4f::IDENTITY;
+	m_ChildModel = Matrix4f();//Matrix4f::IDENTITY;
 }
 
 Matrix4f& Transform::GetModel(bool calcModel)
@@ -51,9 +51,9 @@ void Transform::CalcViewProjection()
 	ViewProjection = Transform::Projection * Transform::View;
 }
 
-void Transform::CalcViewProjection(const Camera& camera)
+void Transform::CalcViewProjection(const Camera* camera)
 {
-    CalcViewProjection(camera.GetPositionRotation(), camera.GetProjection());
+    CalcViewProjection(camera->GetPositionRotation(), camera->GetProjection());
 }
 
 void Transform::CalcViewProjection(const Matrix4f& view, const Matrix4f& projection)

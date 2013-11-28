@@ -1,6 +1,5 @@
 #include "mesh.h"
 #include "engine.h"
-#include "display.h"
 
 #include <fstream>
 #include <sstream>
@@ -23,7 +22,7 @@ Mesh* Mesh::Get(const std::string& name)
 Mesh* Mesh::Create(const std::string& name, Vertex* vertices, int nVertices, INDEX* indices, int nIndices, bool calcNormals, bool calcTangents, const VertexFormat& vertexFormat)
 {
 	if(Meshes.find(name) != Meshes.end())
-		Display::Error("Mesh " + name + " already exists, and therefore cannot be created.");
+		Engine::GetDisplay()->Error("Mesh " + name + " already exists, and therefore cannot be created.");
 
 	Meshes.insert(std::pair<std::string, Mesh*>(name, new Mesh(vertices, nVertices, indices, nIndices, calcNormals, calcTangents, vertexFormat)));
     return Meshes.at(name);
@@ -127,7 +126,7 @@ Mesh::Mesh(const std::string& fileName)
     }
     else
     {
-        Display::Error("Unable to load shader: " + fileName);
+        Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
     }
 
 	std::vector<Vertex> vertexList;

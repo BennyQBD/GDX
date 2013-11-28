@@ -19,7 +19,7 @@ public:
 	void SetChildModel(const Matrix4f& childModel);
 
 	static void CalcViewProjection();
-	static void CalcViewProjection(const Camera& camera);
+	static void CalcViewProjection(const Camera* camera);
 	static void CalcViewProjection(const Matrix4f& view, const Matrix4f& projection);
 	
 	static Vector3f GetEyePosition();

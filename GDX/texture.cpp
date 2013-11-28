@@ -1,6 +1,5 @@
 #include "texture.h"
 #include "stb_image.h"
-#include "display.h"
 #include "engine.h"
 
 std::map<std::string, Texture*> Texture::Textures = std::map<std::string, Texture*>();
@@ -18,7 +17,7 @@ Texture* Texture::Get(const std::string& name, bool linearFiltering, bool repeat
 Texture* Texture::Create(const std::string& name, int width, int height, unsigned char* data, bool linearFiltering, bool repeatTexture)
 {
 	if(Textures.find(name) != Textures.end())
-		Display::Error("Texture " + name + " already exists, and therefore cannot be created.");
+		Engine::GetDisplay()->Error("Texture " + name + " already exists, and therefore cannot be created.");
 
 	Textures.insert(std::pair<std::string, Texture*>(name, new Texture(width, height, data, linearFiltering, repeatTexture)));
     return Textures.at(name);
@@ -46,7 +45,7 @@ Texture::Texture(const std::string& fileName, bool linearFiltering, bool repeatT
     unsigned char* data = stbi_load(("./res/textures/" + fileName).c_str(), &x, &y, &numComponents, 4);
 
     if(data == NULL)
-        Display::Error("Unable to load texture: " + fileName);
+        Engine::GetDisplay()->Error("Unable to load texture: " + fileName);
 
     m_TextureID = Engine::GetRenderer()->CreateTexture(x, y, data, linearFiltering, repeatTexture);
     stbi_image_free(data);

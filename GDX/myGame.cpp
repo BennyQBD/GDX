@@ -8,7 +8,6 @@
 #include "material.h"
 #include "input.h"
 #include "camera.h"
-#include "display.h"
 #include "gameObject.h"
 #include "texture.h"
 
@@ -90,7 +89,7 @@ void MyGame::Input(GameObject* pGameObject)
 	if(Input::GetKey(SDLK_d))
 		g_Camera.Move(g_Camera.GetRight() * (float)(STRAFESPEED * delta));
 
-	Vector2f centerPos = Display::GetCenter();
+	Vector2f centerPos = Engine::GetDisplay()->GetCenter();
 
 	if(mouseLocked)
 	{
@@ -105,20 +104,20 @@ void MyGame::Input(GameObject* pGameObject)
 			g_Camera.Pitch(deltaPos.GetY() * SENSITIVITY_Y);
 
 		if(rotX || rotY)
-			Display::SetMousePos(centerPos);
+			Engine::GetDisplay()->SetMousePos(centerPos);
 	}
 
 	if(Input::GetMouseDown(SDL_BUTTON_LEFT))
 	{
 		mouseLocked = true;
-		Display::ShowMouse(false);
-		Display::SetMousePos(centerPos);
+		Engine::GetDisplay()->ShowMouse(false);
+		Engine::GetDisplay()->SetMousePos(centerPos);
 	}
 
 	if(Input::GetKeyDown(SDLK_ESCAPE))
 	{
 		mouseLocked = false;
-		Display::ShowMouse(true);
+		Engine::GetDisplay()->ShowMouse(true);
 	}
 }
 
@@ -132,7 +131,7 @@ void MyGame::Update(GameObject* pGameObject)
 
 void MyGame::Render(GameObject* pGameObject)
 {
-    Transform::CalcViewProjection(g_Camera);
+    Transform::CalcViewProjection(&g_Camera);
 
 	g_GameObject1.Render();
 	g_GameObject2.Render();

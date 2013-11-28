@@ -4,24 +4,23 @@
 #include <string>
 #include "math3d.h"
 
-namespace Display
+class Display
 {
-    bool Init(int width = 800, int height = 600, const std::string& title = "3D Engine");
-    void Destroy();
+public:
+    virtual bool Init(int width = 800, int height = 600, const std::string& title = "3D Engine");
+    virtual void Destroy();
 
-    void SetMousePos(const Vector2f& pos);
-	void SetTitle(const std::string& title);
-	//void SetIcon(const std::string& fileName);
+    virtual void SetMousePos(const Vector2f& pos);
+	virtual void SetTitle(const std::string& title);
 
-	void ShowMouse(bool show);
-	void SwapBuffers();
+	virtual void ShowMouse(bool show);
+	virtual void SwapBuffers();
 
+	virtual void Error(const std::string& message);
 
-	void Error(const std::string& message);
-
-    float GetAspect();
-	Vector2f GetSize();
-	Vector2f GetCenter();
+    virtual float GetAspect();
+	virtual Vector2f GetSize();
+	virtual Vector2f GetCenter();
 	//bool IsResized();
 };
 

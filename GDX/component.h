@@ -46,12 +46,4 @@ private:
 	Shader* m_pShader;
 };
 
-class DefaultRenderingEngine : public RenderingComponent
-{
-public:
-    virtual void Render(GameObject* pGameObject);
-protected:
-private:
-};
-
 #endif // COMPONENT_H_INCLUDED

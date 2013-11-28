@@ -74,7 +74,7 @@ Vector2f Vector2f::Normalized() const
 ///////////////////////////////////////////////////////////////////////////////
 //MATRIX SECTION
 ///////////////////////////////////////////////////////////////////////////////
-const Matrix4f Matrix4f::IDENTITY =  Matrix4f();
+//const Matrix4f Matrix4f::IDENTITY =  Matrix4f();
 
 Matrix4f Matrix4f::InitTranslation(const Vector3f& translation)
 {

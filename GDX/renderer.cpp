@@ -1,7 +1,7 @@
 #include "renderer.h"
 #include "mesh.h"
 #include "math3d.h"
-#include "display.h"
+#include "engine.h"
 
 #include <GL/glew.h>
 #include <stdio.h>
@@ -72,7 +72,7 @@ static size_t String_FindClosingBrace(const std::string& text, size_t initialBra
         currentLocation = nextClosing;
     }
     
-    Display::Error("Error: Shader is missing a closing brace!");
+    Engine::GetDisplay()->Error("Error: Shader is missing a closing brace!");
     assert(0 == 0);
     
     return -1;
@@ -94,7 +94,7 @@ void EraseShaderFunction(std::string& text, const std::string& functionHeader)
     
     if(begin == std::string::npos)
     {
-        Display::Error("Error: Shader function does not exist!");
+        Engine::GetDisplay()->Error("Error: Shader function does not exist!");
         assert(0 == 0);
     }
     
@@ -211,7 +211,7 @@ static inline void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, 
 
         std::stringstream message;
         message << errorMessage << ": '" << error << "'";
-        Display::Error(message.str());
+        Engine::GetDisplay()->Error(message.str());
     }
 }
 
@@ -223,7 +223,7 @@ static inline unsigned int CreateShader(const std::string& text, unsigned int ty
     errorMessage << "Error compiling shader type " << type;
 
     if(shader == 0)
-        Display::Error(errorMessage.str());
+        Engine::GetDisplay()->Error(errorMessage.str());
 
     const GLchar* p[1];
     p[0] = text.c_str();

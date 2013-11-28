@@ -1,7 +1,6 @@
 #ifndef SHADER_H_INCLUDED
 #define SHADER_H_INCLUDED
 
-#include "display.h"
 #include "math3d.h"
 #include "material.h"
 #include "transform.h"
@@ -72,7 +71,7 @@ private:
         }
         else
         {
-            Display::Error("Unable to load shader: " + fileName);
+            Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
         }
 
         return output;

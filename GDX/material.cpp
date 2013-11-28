@@ -1,5 +1,5 @@
 #include "material.h"
-#include "display.h"
+#include "engine.h"
 
 const std::string Material::DiffuseTextureName = "diffuse";
 const std::string Material::ColorVector3fName = "color";
@@ -21,7 +21,7 @@ Material* Material::Get(const std::string& name)
 Material* Material::Create(const std::string& name, Texture* diffuse, const Vector3f& color)
 {
 	if(Materials.find(name) != Materials.end())
-		Display::Error("Material " + name + " already exists, and therefore cannot be created.");
+		Engine::GetDisplay()->Error("Material " + name + " already exists, and therefore cannot be created.");
 
 	Materials.insert(std::pair<std::string, Material*>(name, new Material(diffuse, color)));
     return Materials.at(name);

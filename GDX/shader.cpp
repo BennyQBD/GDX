@@ -108,7 +108,7 @@ void Shader::AddUniform(const std::string& uniform, const std::string& uniformTy
 
     if(location == 0xFFFFFFFF)
     {
-        Display::Error("Could not find uniform: " + uniform + " " + uniformType);
+        Engine::GetDisplay()->Error("Could not find uniform: " + uniform + " " + uniformType);
     }
     assert(location != 0xFFFFFFFF);
 
@@ -144,7 +144,7 @@ void Shader::Update(Transform& transform, Material& material)
 			else if(it->Type.compare("vec3") == 0)
 				Engine::GetRenderer()->SetUniformVector3f(it->Location, material.GetVector3f(it->Name));
 			else
-				Display::Error("Type " + it->Type + " not currently supported for uniform " + it->Name);
+				Engine::GetDisplay()->Error("Type " + it->Type + " not currently supported for uniform " + it->Name);
 		}
     }
     

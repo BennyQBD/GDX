@@ -19,7 +19,7 @@ RenderingComponent* RenderingComponent::Get(const std::string& name)
 RenderingComponent* RenderingComponent::Create(const std::string& name, Mesh* pMesh, Material* pMaterial, Shader* pShader)
 {
 	if(Components.find(name) != Components.end())
-		Display::Error("RenderingComponent " + name + " already exists, and therefore cannot be created.");
+		Engine::GetDisplay()->Error("RenderingComponent " + name + " already exists, and therefore cannot be created.");
 
 	Components.insert(std::pair<std::string, RenderingComponent*>(name, new RenderingComponent(pMesh, pMaterial, pShader)));
     return Components.at(name);
@@ -54,16 +54,3 @@ void RenderingComponent::Render(GameObject* pGameObject)
 	m_pShader->Update(pGameObject->GetTransform(), *m_pMaterial);
 	m_pMesh->Draw();
 }
-
-void DefaultRenderingEngine::Render(GameObject* pGameObject)
-{
-    for(int i = 0; i < pGameObject->GetNumberOfChildren(); i++)
-    {
-        GameObject* pChild = pGameObject->GetChild(i);
-        
-        pChild->GetTransform().SetChildModel(pGameObject->GetTransform().GetModel(false));
-        pChild->Render();
-        Render(pChild);
-    }
-}
-

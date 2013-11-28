@@ -1,6 +1,5 @@
 #include "engine.h"
 #include "timing.h"
-#include "display.h"
 #include "input.h"
 #include "shader.h"
 #include "mesh.h"
@@ -10,8 +9,10 @@
 
 static CoreEngine g_DefaultEngine;
 static Renderer g_DefaultRenderer;
+static Display g_Display;
 static CoreEngine* g_pCoreEngine = &g_DefaultEngine;
 static Renderer* g_pRenderer = &g_DefaultRenderer;
+static Display* g_pDisplay = &g_Display;
 
 void Engine::Start()
 {
@@ -32,7 +33,7 @@ void Engine::DeleteAllResources()
 	RenderingComponent::DeleteAll();
 }
 
-void Engine::SetGame(GameObject& game)
+void Engine::SetGame(Game& game)
 {
     g_pCoreEngine->SetGame(game);
 }
@@ -47,12 +48,17 @@ void Engine::SetRenderer(Renderer& renderer)
     g_pRenderer = &renderer;
 }
 
-RenderingComponent* Engine::GetRenderingEngine()
+void Engine::SetDisplay(Display& display)
 {
-    return Engine::GetGame()->GetRenderingComponent();
+	g_pDisplay = &display;
 }
 
-GameObject* Engine::GetGame()
+RenderingEngine* Engine::GetRenderingEngine()
+{
+	return Engine::GetGame()->GetRenderingEngine();
+}
+
+Game* Engine::GetGame()
 {
     return g_pCoreEngine->GetGame();
 }
@@ -62,15 +68,25 @@ Renderer* Engine::GetRenderer()
     return g_pRenderer;
 }
 
+Display* Engine::GetDisplay()
+{
+	return g_pDisplay;
+}
+
 ////--------------------------------------------------------------------------------------
 //// Core Engine
 ////--------------------------------------------------------------------------------------
 static const int FRAME_CAP = 500;
 
+#include "mouseLook.h"
+
 CoreEngine::CoreEngine()
 {
-    static DefaultRenderingEngine defaultRenderingEngine;
-    static GameObject defaultGame = GameObject(Transform(), &defaultRenderingEngine);
+    static RenderingEngine defaultRenderingEngine;
+	static GameObject defaultRootObject;
+	static Game defaultGame = Game(&defaultRootObject, &defaultRenderingEngine);
+	static MouseLook defaultComponent;
+	defaultGame.GetRootObject()->SetGameComponent(&defaultComponent);
     m_IsRunning = false;
     m_pGame = &defaultGame;
 }
@@ -103,7 +119,7 @@ void CoreEngine::Start()
 				
             convert << frameCount << ": " << 1000.0/((double)frameCount) << "ms";
 
-            Display::SetTitle(convert.str());
+            Engine::GetDisplay()->SetTitle(convert.str());
             frameCount = 0;
             frameTimeCount = 0;
         }
@@ -125,7 +141,7 @@ void CoreEngine::Start()
    
             m_pGame->Render();
 
-            Display::SwapBuffers();
+            Engine::GetDisplay()->SwapBuffers();
             frameCount++;
         }
         else
@@ -142,12 +158,12 @@ void CoreEngine::Stop()
     m_IsRunning = false;
 }
 
-void CoreEngine::SetGame(GameObject& game)
+void CoreEngine::SetGame(Game& game)
 {
     m_pGame = &game;
 }
 
-GameObject* CoreEngine::GetGame()
+Game* CoreEngine::GetGame()
 {
     return m_pGame;
 }

@@ -1,8 +1,8 @@
-﻿Build started 11/27/2013 5:26:29 PM.
+﻿Build started 11/27/2013 9:08:28 PM.
      1>Project "C:\Users\batman_2\documents\visual studio 2012\Projects\GDX\GDX\GDX.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"./SDL-1.2.15/include" /I"./glew-1.10.0/include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt engine.cpp myGame.cpp
-         myGame.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"./SDL-1.2.15/include" /I"./glew-1.10.0/include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt engine.cpp main.cpp
+         main.cpp
          engine.cpp
          Generating Code...
        Link:
@@ -10,14 +10,17 @@
          Debug\component.obj
          Debug\display.obj
          Debug\engine.obj
+         Debug\game.obj
          Debug\gameObject.obj
          Debug\input.obj
          Debug\main.obj
          Debug\material.obj
          Debug\math3d.obj
          Debug\mesh.obj
+         Debug\mouseLook.obj
          Debug\myGame.obj
          Debug\renderer.obj
+         Debug\renderingEngine.obj
          Debug\shader.obj
          Debug\stb_image.obj
          Debug\texture.obj
@@ -28,4 +31,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.67
+Time Elapsed 00:00:02.59

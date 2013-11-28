@@ -1,5 +1,5 @@
 #include "timing.h"
-#include "display.h"
+#include "engine.h"
 
 #ifdef WIN32
 #define OS_WINDOWS
@@ -28,7 +28,7 @@ void Time::Init()
 #ifdef OS_WINDOWS
     LARGE_INTEGER li;
     if(!QueryPerformanceFrequency(&li))
-		Display::Error("QueryPerformanceFrequency failed in timer initialization");
+		Engine::GetDisplay()->Error("QueryPerformanceFrequency failed in timer initialization");
     
     g_freq = double(li.QuadPart);
 #endif
@@ -47,7 +47,7 @@ double Time::GetTime()
 #ifdef OS_WINDOWS
     LARGE_INTEGER li;
     if(!QueryPerformanceCounter(&li))
-		Display::Error("QueryPerformanceCounter failed in get time!");
+		Engine::GetDisplay()->Error("QueryPerformanceCounter failed in get time!");
     
     return double(li.QuadPart)/g_freq;
 #endif

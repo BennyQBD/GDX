@@ -1,21 +1,16 @@
 #include <stdio.h>
-#include "display.h"
-#include "engine.h"
-#include "myGame.h"
+#include "GDX.h"
 
-#include "shader.h"
-#include "renderer.h"
-
-int main ( int argc, char** argv )
+int main(int argc, char** argv)
 {
-    Display::Init(800, 600, "Something awesome");
+	Engine::GetDisplay()->Init(800, 600, "Something awesome");
 
-    MyGame myGame;
-    
-    Engine::GetGame()->SetGameComponent(&myGame);
+	GameObject box = GameObject(Transform(), RenderingComponent::Create("shadedEgg", Mesh::Get("egg1.obj"), Material::Create("brick", Texture::Get("bricks.jpg")), Shader::Get("basicShader")));
+
+	Engine::GetGame()->AddGameObject(&box);
     Engine::Start();
     
-    Display::Destroy();
+	Engine::GetDisplay()->Destroy();
     printf("Exited cleanly\n");
     return 0;
 }

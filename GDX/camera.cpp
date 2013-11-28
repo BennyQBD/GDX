@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "display.h"
+#include "engine.h"
 
 Camera::Camera(const Vector3f& pos, const Vector3f& forward, const Vector3f& up)
 {
@@ -56,7 +56,7 @@ Matrix4f Camera::GetPositionRotation() const
 
 Matrix4f Camera::GetProjection() const
 {
-    return Matrix4f::IDENTITY;
+    return Matrix4f();//Matrix4f::IDENTITY;
 }
 
 Vector3f Camera::GetForward() const
@@ -105,5 +105,5 @@ PerspectiveCamera::PerspectiveCamera(const Vector3f& pos, const Vector3f& forwar
 
 Matrix4f PerspectiveCamera::GetProjection() const
 {
-    return Matrix4f::InitPerspective(m_Fov, Display::GetAspect(), m_ZNear, m_ZFar);
+    return Matrix4f::InitPerspective(m_Fov, Engine::GetDisplay()->GetAspect(), m_ZNear, m_ZFar);
 }

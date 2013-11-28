@@ -156,7 +156,7 @@ private:
 class Matrix4f 
 {
 public:
-    static const Matrix4f IDENTITY;
+    //static const Matrix4f IDENTITY;
 
 	static Matrix4f InitTranslation(const Vector3f& translation);
 	static Matrix4f InitRotation(const Vector3f& eulerAngles);
