@@ -50,7 +50,10 @@ RenderingComponent::RenderingComponent(Mesh* pMesh, Material* pMaterial, Shader*
 
 void RenderingComponent::Render(GameObject* pGameObject)
 {
-	m_pShader->Bind();
-	m_pShader->Update(pGameObject->GetTransform(), *m_pMaterial);
-	m_pMesh->Draw();
+	if(m_pShader != 0)
+	{
+		m_pShader->Bind();
+		m_pShader->Update(pGameObject->GetTransform(), *m_pMaterial);
+		m_pMesh->Draw();
+	}
 }

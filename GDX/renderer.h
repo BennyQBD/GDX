@@ -20,6 +20,12 @@ public:
     virtual void ClearScreenAndDepth();
 	virtual void ClearScreen();
 	virtual void ClearDepth();
+
+	virtual void SetDepthTest(bool value);
+
+	//TODO: Make these functions more useful!
+	virtual void SetBlending(bool value);
+	virtual void SetDepthFunc(bool value);
 	
 	virtual unsigned int CreateVertexBuffer(void* data, int dataSize, bool isStatic = true);
 	virtual unsigned int CreateIndexBuffer(void* data, int dataSize, bool isStatic = true);

@@ -25,9 +25,30 @@ public:
     inline void RemoveVector3f(const std::string& name) {m_Vector3fMap.erase(name);}
     inline void RemoveFloat(const std::string& name)    {m_FloatMap.erase(name);}
     
-    inline const Texture* GetTexture(const std::string& name)  {return m_TextureMap.at(name);}
-    inline Vector3f GetVector3f(const std::string& name)       {return m_Vector3fMap.at(name);}
-    inline float GetFloat(const std::string& name)            {return m_FloatMap.at(name);}
+    inline const Texture* GetTexture(const std::string& name)  
+	{
+		std::map<std::string, const Texture*>::iterator it = m_TextureMap.find(name);
+		if(it != m_TextureMap.end())
+			return it->second;
+		else
+			return 0;
+	}
+    inline Vector3f GetVector3f(const std::string& name)       
+	{
+		std::map<std::string, Vector3f>::iterator it = m_Vector3fMap.find(name);
+		if(it != m_Vector3fMap.end())
+			return it->second;
+		else
+			return Vector3f::ZERO;
+	}
+    inline float GetFloat(const std::string& name)            
+	{
+		std::map<std::string, float>::iterator it = m_FloatMap.find(name);
+		if(it != m_FloatMap.end())
+			return it->second;
+		else
+			return 0;
+	}
     
     inline const Texture* GetDiffuseTexture() {return GetTexture(DiffuseTextureName);}
     inline const Vector3f GetColor()          {return GetVector3f(ColorVector3fName);}

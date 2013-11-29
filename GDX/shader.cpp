@@ -1,4 +1,5 @@
 #include "shader.h"
+#include "util.h"
 
 #include <sstream>
 #include <cassert>
@@ -40,6 +41,40 @@ void Shader::DeleteAll()
 {
     for (std::map<std::string, Shader*>::iterator it=ShaderPrograms.begin(); it!=ShaderPrograms.end(); ++it)
         delete it->second;
+}
+
+std::string Shader::LoadShader(const std::string& fileName)
+{
+    std::ifstream file;
+    file.open(("./res/shaders/" + fileName).c_str());
+
+    std::string output;
+    std::string line;
+
+    if(file.is_open())
+    {
+        while(file.good())
+        {
+            getline(file, line);
+
+			if(line.find("#include") == std::string::npos)
+				output.append(line + "\n");
+			else
+			{
+				std::string includeFileName = Util::Split(line, ' ')[1];
+				includeFileName = includeFileName.substr(1,includeFileName.length() - 2);
+
+				std::string toAppend = LoadShader(includeFileName);
+				output.append(toAppend + "\n");
+			}
+        }
+    }
+    else
+    {
+        Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
+    }
+
+    return output;
 }
 
 Shader::Shader(const std::string& fileName)
@@ -124,29 +159,7 @@ void Shader::ValidateShader()
 void Shader::Update(Transform& transform, Material& material)
 {
     for(std::vector<UniformData>::iterator it = m_Uniforms.begin(); it != m_Uniforms.end(); ++it)
-    {
-		if(it->Type.compare("sampler2D") == 0)
-		{
-		    int unit = Material::GetTextureUnit(it->Name);
-            material.GetTexture(it->Name)->Bind(unit);
-            Engine::GetRenderer()->SetUniformInt(it->Location, unit);
-		}
-        else if(it->Name.compare("MVP") == 0)
-            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetMVP());
-		else if(it->Name.compare("transform") == 0)
-            Engine::GetRenderer()->SetUniformMatrix4f(it->Location, transform.GetModel());
-		else if(it->Name.compare("eyePos") == 0)
-			Engine::GetRenderer()->SetUniformVector3f(it->Location, Transform::GetEyePosition());
-		else
-		{
-			if(it->Type.compare("float") == 0)
-				Engine::GetRenderer()->SetUniformFloat(it->Location, material.GetFloat(it->Name));
-			else if(it->Type.compare("vec3") == 0)
-				Engine::GetRenderer()->SetUniformVector3f(it->Location, material.GetVector3f(it->Name));
-			else
-				Engine::GetDisplay()->Error("Type " + it->Type + " not currently supported for uniform " + it->Name);
-		}
-    }
+		Engine::GetRenderingEngine()->UpdateUniform(&(*it), transform, material);
     
     if(!m_IsValidated)
         ValidateShader();

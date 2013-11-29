@@ -7,7 +7,7 @@
 #define OS_LINUX
 #endif
 
-#ifdef OS_LINX
+#ifdef OS_LINUX
 #include <sys/time.h>
 #endif
 

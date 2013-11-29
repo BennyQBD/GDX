@@ -53,29 +53,29 @@ private:
     Shader(const Shader& shader) {};
 	void operator=(const Shader& shader) {};
 
-	static inline std::string LoadShader(const std::string& fileName)
-	{
-	    std::ifstream file;
-        file.open(("./res/shaders/" + fileName).c_str());
+	static std::string LoadShader(const std::string& fileName);
+	//{
+	//    std::ifstream file;
+ //       file.open(("./res/shaders/" + fileName).c_str());
 
-        std::string output;
-        std::string line;
+ //       std::string output;
+ //       std::string line;
 
-        if(file.is_open())
-        {
-            while(file.good())
-            {
-                getline(file, line);
-                output.append(line + "\n");
-            }
-        }
-        else
-        {
-            Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
-        }
+ //       if(file.is_open())
+ //       {
+ //           while(file.good())
+ //           {
+ //               getline(file, line);
+ //               output.append(line + "\n");
+ //           }
+ //       }
+ //       else
+ //       {
+ //           Engine::GetDisplay()->Error("Unable to load shader: " + fileName);
+ //       }
 
-        return output;
-	}
+ //       return output;
+	//}
 };
 
 #endif // SHADER_H_INCLUDED

@@ -1,4 +1,5 @@
 #version 330
+#include "lighting.glh"
 
 attribute vec3 position;
 attribute vec2 texCoord;
@@ -24,40 +25,6 @@ void VSmain()
 	worldPos0 = (transform * vec4(position, 1.0)).xyz;
 }
 
-struct BaseLight
-{
-    vec3 color;
-    float intensity;
-};
-
-struct DirectionalLight
-{
-    BaseLight base;
-    vec3 direction;
-};
-
-vec4 CalcLight(BaseLight base, vec3 direction, vec3 normal)
-{
-    float diffuseFactor = clamp(dot(normal, -direction), 0.0, 1.0);
-    
-    vec4 diffuseColor = vec4(base.color, 1.0) * base.intensity * diffuseFactor;
-        
-    vec3 directionToEye = normalize(eyePos - worldPos0);
-    vec3 reflectDirection = normalize(reflect(direction, normal));
-        
-    float specularFactor = clamp(dot(directionToEye, reflectDirection), 0.0, 1.0);
-    specularFactor = pow(specularFactor, specularPower);
-        
-    vec4 specularColor = vec4(base.color, 1.0) * specularIntensity * specularFactor;
-    
-    return diffuseColor + specularColor;
-}
-
-vec4 CalcDirectionalLight(DirectionalLight directionalLight, vec3 normal)
-{
-    return CalcLight(directionalLight.base, -directionalLight.direction, normal);
-}
-
 void FSmain()
 {
 	vec4 color = texture(diffuse, texCoord0.xy);
@@ -69,7 +36,7 @@ void FSmain()
 	light.direction = normalize(vec3(1,1,1));
 	
 	vec4 totalLight = vec4(0.1, 0.1, 0.1, 1.0);
-	totalLight += CalcDirectionalLight(light, normal);
+	totalLight += CalcDirectionalLight(light, normal, normalize(eyePos - worldPos0), specularIntensity, specularPower);
 
-	gl_FragColor = color * totalLight; 
+	gl_FragColor = color * totalLight;
 }

@@ -140,6 +140,43 @@ void Renderer::ClearDepth()
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
+void Renderer::SetBlending(bool value)
+{
+	if(value)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE,GL_ONE);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+}
+
+void Renderer::SetDepthTest(bool value)
+{
+	if(value)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+}
+
+void Renderer::SetDepthFunc(bool value)
+{
+	if(value)
+	{
+		glDepthFunc(GL_LEQUAL);
+	}
+	else
+	{
+		glDepthFunc(GL_LESS);
+	}
+}
+
 static inline unsigned int CreateDataBuffer(void* data, int dataSize, bool isStatic, int bindHint)
 {
     unsigned int buffer;
@@ -215,9 +252,12 @@ static inline void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, 
     }
 }
 
+//#include <iostream>
+
 static inline unsigned int CreateShader(const std::string& text, unsigned int type)
 {
     GLuint shader = glCreateShader(type);
+	//std::cout << text << std::endl;
     
     std::stringstream errorMessage;
     errorMessage << "Error compiling shader type " << type;
