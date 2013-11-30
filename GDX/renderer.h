@@ -2,6 +2,7 @@
 #define RENDERER_H_INCLUDED
 
 #include <string>
+#include <vector>
 #include "math3d.h"
 
 struct VertexFormat
@@ -9,6 +10,20 @@ struct VertexFormat
     int VertexSize;
     int nElements;
     int* ElementSizes;
+};
+
+struct UniformData
+{
+    unsigned int Location;
+    std::string Type;
+    std::string Name;
+    
+    UniformData(unsigned int UniformLocation, const std::string& UniformType, const std::string& UniformName)
+    {
+        Location = UniformLocation;
+        Type = UniformType;
+        Name = UniformName;
+    }
 };
 
 class Renderer
@@ -22,6 +37,7 @@ public:
 	virtual void ClearDepth();
 
 	virtual void SetDepthTest(bool value);
+	virtual void SetDepthWrite(bool value);
 
 	//TODO: Make these functions more useful!
 	virtual void SetBlending(bool value);
@@ -35,7 +51,7 @@ public:
     virtual unsigned int CreateVertexShader(const std::string& text);
     virtual unsigned int CreateFragmentShader(const std::string& text);
     virtual unsigned int CreateShaderProgram(unsigned int* shaders, int numShaders);
-    virtual unsigned int GetShaderProgramUniformLocation(unsigned int program, const std::string& name);
+	virtual std::vector<UniformData> CreateShaderUniforms(const std::string& shaderText, unsigned int shaderProgram);
     virtual void ValidateShaderProgram(unsigned int program);
     virtual void BindShaderProgram(unsigned int program);
     virtual void DeleteShaderProgram(unsigned int program, unsigned int* shaders, int numShaders);

@@ -1,6 +1,7 @@
 #include "renderingEngine.h"
 #include "shader.h"
 #include "mesh.h"
+#include "util.h"
 
 PerspectiveCamera RenderingEngine::DefaultCamera = PerspectiveCamera(Vector3f(0, 1, -5), Vector3f::FORWARD, Vector3f::UP, ToRadians(70.0f), 0.01f, 1000.0f);
 
@@ -44,18 +45,45 @@ void RenderingEngine::Render(GameObject* pGameObject)
 
 	Engine::GetRenderer()->SetBlending(true);
 	Engine::GetRenderer()->SetDepthFunc(true);
+	Engine::GetRenderer()->SetDepthWrite(false);
 
 	//TODO: Set up uniforms for light sources and update accordingly!
 	RenderPass(pGameObject, Shader::Get("forward-directional"));
 
 	Engine::GetRenderer()->SetBlending(false);
 	Engine::GetRenderer()->SetDepthFunc(false);
+	Engine::GetRenderer()->SetDepthWrite(true);
 	DefaultPass(pGameObject);
 }
 
-void RenderingEngine::UpdateUniform(UniformData* it, Transform& transform, Material& material)
+struct BaseLight
 {
-	if(it->Type.compare("sampler2D") == 0)
+	Vector3f color;
+	float intensity;
+};
+
+struct DirectionalLight
+{
+	BaseLight base;
+	Vector3f direction;
+};
+
+void RenderingEngine::UpdateUniform(UniformData* it, Transform& transform, Material& material)
+{	
+	std::vector<std::string> tokens = Util::Split(it->Name, '.');
+
+	if(tokens[0].compare("directionalLight") == 0)
+	{
+		std::string flattenedName = tokens[tokens.size() - 1];
+
+		if(flattenedName.compare("color") == 0)
+			Engine::GetRenderer()->SetUniformVector3f(it->Location, Vector3f(1,1,1));
+		else if(flattenedName.compare("intensity") == 0)
+			Engine::GetRenderer()->SetUniformFloat(it->Location, 0.8f);
+		else if(flattenedName.compare("direction") == 0)
+			Engine::GetRenderer()->SetUniformVector3f(it->Location, Vector3f(1,1,1).Normalized());
+	}
+	else if(it->Type.compare("sampler2D") == 0)
 	{
 	    int unit = Material::GetTextureUnit(it->Name);
         material.GetTexture(it->Name)->Bind(unit);

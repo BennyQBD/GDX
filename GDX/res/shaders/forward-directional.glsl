@@ -17,6 +17,8 @@ uniform sampler2D diffuse;
 uniform float specularIntensity;
 uniform float specularPower;
 
+uniform DirectionalLight directionalLight;
+
 void VSmain()
 {
 	gl_Position = MVP * vec4(position, 1.0);
@@ -27,13 +29,6 @@ void VSmain()
 
 void FSmain()
 {
-	vec3 normal = normalize(normal0);
-	
-	DirectionalLight light;
-	light.base.color = vec3(1,1,1);
-	light.base.intensity = 0.8;
-	light.direction = normalize(vec3(1,1,1));
-
 	gl_FragColor = texture(diffuse, texCoord0.xy) 
-		* CalcDirectionalLight(light, normal, normalize(eyePos - worldPos0), specularIntensity, specularPower);
+		* CalcDirectionalLight(directionalLight, normalize(normal0), normalize(eyePos - worldPos0), specularIntensity, specularPower);
 }

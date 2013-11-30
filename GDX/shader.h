@@ -12,20 +12,6 @@
 #include <map>
 #include <iostream>
 
-struct UniformData
-{
-    unsigned int Location;
-    std::string Type;
-    std::string Name;
-    
-    UniformData(unsigned int UniformLocation, const std::string& UniformType, const std::string& UniformName)
-    {
-        Location = UniformLocation;
-        Type = UniformType;
-        Name = UniformName;
-    }
-};
-
 class Shader
 {
 public:
@@ -35,6 +21,7 @@ public:
 	static Shader* Get(const std::string& name);
 	static void Delete(const std::string& name);
     static void DeleteAll();
+	
 private:
     static std::map<std::string, Shader*> ShaderPrograms;
 
@@ -43,8 +30,6 @@ private:
     std::vector<UniformData> m_Uniforms;
     bool m_IsValidated;
 	
-	void AddUniform(const std::string& uniform, const std::string& uniformType);
-	void AddUniforms(const std::string& shaderText);
 	void ValidateShader();
 	
     Shader(const std::string& fileName);
